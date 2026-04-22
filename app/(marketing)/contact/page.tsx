@@ -1,5 +1,4 @@
 import ContactForm from '@/components/forms/ContactForm';
-import { Mail, Github, Linkedin } from 'lucide-react';
 
 export const metadata = {
   title: 'Contact | asixstud.io',
@@ -32,10 +31,7 @@ export default function Contact() {
             <div className="space-y-6">
               {/* Email */}
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Mail size={20} className="text-slate-600 dark:text-slate-400" />
-                  <h3 className="font-semibold text-slate-900 dark:text-white">Email</h3>
-                </div>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Email</h3>
                 <a
                   href="mailto:hello@asixstud.io"
                   className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
@@ -46,10 +42,7 @@ export default function Contact() {
 
               {/* GitHub */}
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Github size={20} className="text-slate-600 dark:text-slate-400" />
-                  <h3 className="font-semibold text-slate-900 dark:text-white">GitHub</h3>
-                </div>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">GitHub</h3>
                 <a
                   href="https://github.com"
                   target="_blank"
@@ -62,10 +55,7 @@ export default function Contact() {
 
               {/* LinkedIn */}
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Linkedin size={20} className="text-slate-600 dark:text-slate-400" />
-                  <h3 className="font-semibold text-slate-900 dark:text-white">LinkedIn</h3>
-                </div>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">LinkedIn</h3>
                 <a
                   href="https://linkedin.com"
                   target="_blank"
