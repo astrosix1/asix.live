@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m 'Add Ascend iframe URL for live embedding *)",
+      "Bash(git commit -m 'Set up Ascend as subdomain - update hub to link to ascend.asixstud.io *)"
+    ]
+  }
+}

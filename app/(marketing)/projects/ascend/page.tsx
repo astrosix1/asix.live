@@ -46,13 +46,21 @@ export default function AscendProject() {
           </div>
         </section>
 
-        {/* Live Demo */}
-        <ProjectIframe
-          iframeUrl={project.iframeUrl}
-          externalUrl={project.externalUrl}
-          projectName={project.name}
-          projectColor={project.color}
-        />
+        {/* Live App CTA */}
+        <section className="mb-16 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-lg p-12 text-center border border-blue-200 dark:border-blue-800">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Experience Ascend</h2>
+          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
+            Ready to replace your addictions with hobbies? Launch the full Ascend app and start your journey to change today.
+          </p>
+          {project.externalUrl && (
+            <Link href={project.externalUrl} target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="gap-2 px-8">
+                Launch Ascend App
+                <ArrowRight size={18} />
+              </Button>
+            </Link>
+          )}
+        </section>
 
         {/* Description */}
         <section className="mb-16">

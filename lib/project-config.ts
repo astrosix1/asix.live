@@ -12,8 +12,8 @@ export const PROJECTS = {
     color: '#3B82F6', // Blue
     image: '/images/projects/ascend.jpg',
     category: 'Social & Wellness',
-    iframeUrl: 'https://ascend001.vercel.app/', // Live demo
-    externalUrl: 'https://ascend001.vercel.app/', // External link
+    iframeUrl: null, // Hosted at subdomain
+    externalUrl: 'https://ascend.asixstud.io/', // Subdomain URL
     features: [
       'Habit replacement tracking',
       'Competitive leaderboards',
