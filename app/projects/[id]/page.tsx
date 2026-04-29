@@ -111,18 +111,69 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             </div>
           )}
 
-          {/* Ascend App Preview */}
+          {/* Ascend App Screenshots */}
           {isAscend && (
             <div className="py-12 border-t border-gray-200">
-              <h2 className="text-4xl font-bold mb-12 text-gray-900">Experience Ascend</h2>
+              <h2 className="text-4xl font-bold mb-4 text-gray-900">App Showcase</h2>
               <p className="text-xl text-gray-600 mb-12 max-w-2xl">
-                Ascend is your personal wellness companion. Build better habits, track your progress, and achieve your goals with our intuitive mobile app.
+                Explore Ascend's intuitive interface designed for building better habits and tracking your wellness journey.
               </p>
 
-              <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-                <p className="text-gray-600 text-center py-12">
-                  👆 Click the "Launch Ascend" button above to see the app in action and start your wellness journey.
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Screenshot 1 */}
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
+                    <img
+                      src="https://i.imgur.com/jTu8O6o.png"
+                      alt="Dashboard - Today's Habits"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Dashboard</h3>
+                  <p className="text-gray-600">Track your daily habits and visualize progress with intuitive charts and streaks.</p>
+                </div>
+
+                {/* Screenshot 2 */}
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
+                    <img
+                      src="https://i.imgur.com/RsBlwAQ.png"
+                      alt="Detox - Phone Detox Feature"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Detox</h3>
+                  <p className="text-gray-600">Intentionally disconnect with guided detox sessions to build healthier digital habits.</p>
+                </div>
+
+                {/* Screenshot 3 */}
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
+                    <img
+                      src="https://i.imgur.com/mHHxWqB.png"
+                      alt="Discover - Wellness Insights"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Discover</h3>
+                  <p className="text-gray-600">Explore personalized wellness recommendations and learn about healthy habits.</p>
+                </div>
+              </div>
+
+              {/* CTA Section */}
+              <div className="mt-16 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-12 text-center border border-gray-200">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Transform Your Habits?</h3>
+                <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+                  Launch Ascend now and start your wellness journey with habit tracking, journaling, and personalized insights.
                 </p>
+                <a
+                  href={project.external_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-8 py-4 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                >
+                  Open Ascend →
+                </a>
               </div>
             </div>
           )}
