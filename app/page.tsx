@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getProjectSubdomain } from "@/lib/subdomain";
 import { redirect } from "next/navigation";
 
-export default function Home() {
-  const projectSubdomain = getProjectSubdomain();
+export default async function Home() {
+  const projectSubdomain = await getProjectSubdomain();
 
   // If on a project subdomain, redirect to that project's full-screen page
   if (projectSubdomain === "ascend") {

@@ -16,16 +16,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "asixstud - Project Portfolio",
-  description: "A collection of projects showcasing web development, design, and more.",
+  title: "asix - Project Portfolio",
+  description: "A collection of creative projects showcasing web development and design.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const projectSubdomain = getProjectSubdomain();
+  const projectSubdomain = await getProjectSubdomain();
   const showNavbar = !projectSubdomain; // Hide navbar for project subdomains
 
   return (
