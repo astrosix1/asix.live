@@ -124,39 +124,39 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 <div className="space-y-4">
                   <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
                     <img
-                      src="https://i.imgur.com/jTu8O6o.png"
-                      alt="Dashboard - Today's Habits"
+                      src="https://i.imgur.com/GO7RLaE.png"
+                      alt="Ascend App Screenshot 1"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">Dashboard</h3>
-                  <p className="text-gray-600">Track your daily habits and visualize progress with intuitive charts and streaks.</p>
+                  <h3 className="text-lg font-bold text-gray-900">Habit Dashboard</h3>
+                  <p className="text-gray-600">Track, visualize, and manage your daily habits with an intuitive interface.</p>
                 </div>
 
                 {/* Screenshot 2 */}
                 <div className="space-y-4">
                   <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
                     <img
-                      src="https://i.imgur.com/RsBlwAQ.png"
-                      alt="Detox - Phone Detox Feature"
+                      src="https://i.imgur.com/rEANcYQ.png"
+                      alt="Ascend App Screenshot 2"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">Detox</h3>
-                  <p className="text-gray-600">Intentionally disconnect with guided detox sessions to build healthier digital habits.</p>
+                  <h3 className="text-lg font-bold text-gray-900">Progress Tracking</h3>
+                  <p className="text-gray-600">Monitor your progress with detailed charts, streaks, and personalized insights.</p>
                 </div>
 
                 {/* Screenshot 3 */}
                 <div className="space-y-4">
                   <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl aspect-[9/16]">
                     <img
-                      src="https://i.imgur.com/mHHxWqB.png"
-                      alt="Discover - Wellness Insights"
+                      src="https://i.imgur.com/9qUEsBQ.png"
+                      alt="Ascend App Screenshot 3"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">Discover</h3>
-                  <p className="text-gray-600">Explore personalized wellness recommendations and learn about healthy habits.</p>
+                  <h3 className="text-lg font-bold text-gray-900">Wellness Library</h3>
+                  <p className="text-gray-600">Discover curated habits and wellness tips tailored to your health goals.</p>
                 </div>
               </div>
 
