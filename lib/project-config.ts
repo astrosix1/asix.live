@@ -10,10 +10,10 @@ export const PROJECTS = {
       'Ascend is a social fitness app designed to help you break bad habits by building positive ones. Compete with friends, track your progress, and celebrate wins together.',
     icon: '🚀',
     color: '#3B82F6', // Blue
-    image: '/images/projects/ascend.jpg',
+    image: null, // TODO: Add hero image
     category: 'Social & Wellness',
     iframeUrl: null, // Hosted at subdomain
-    externalUrl: 'https://ascend.asixstud.io/', // Subdomain URL
+    externalUrl: 'https://ascend.asix.live/', // Subdomain URL
     features: [
       'Habit replacement tracking',
       'Competitive leaderboards',
@@ -33,7 +33,7 @@ export const PROJECTS = {
       'GeoIntel visualizes global events on an interactive 3D globe. Watch events unfold worldwide, explore event details, and understand global patterns through data visualization.',
     icon: '🌍',
     color: '#10B981', // Green
-    image: '/images/projects/geointel.jpg',
+    image: null, // TODO: Add hero image
     category: 'Data Visualization',
     iframeUrl: null,
     externalUrl: null,
@@ -56,7 +56,7 @@ export const PROJECTS = {
       'Heavy Pocket brings enterprise-grade financial analysis to your personal finances. Get CFO-level insights into spending, forecasting, and financial health.',
     icon: '💼',
     color: '#F59E0B', // Amber
-    image: '/images/projects/heavy-pocket.jpg',
+    image: null, // TODO: Add hero image
     category: 'Finance',
     iframeUrl: null,
     externalUrl: null,

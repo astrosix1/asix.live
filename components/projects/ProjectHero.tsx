@@ -5,7 +5,7 @@ interface ProjectHeroProps {
   name: string;
   tagline: string;
   description: string;
-  image: string;
+  image: string | null;
   category: string;
   color: string;
 }
