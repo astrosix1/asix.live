@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { useAuth } from './AuthProvider';
 import { useRouter } from 'next/navigation';
 
-export function Navbar() {
+interface NavbarProps {
+  onLoginClick?: () => void;
+}
+
+export function Navbar({ onLoginClick }: NavbarProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -40,9 +44,12 @@ export function Navbar() {
                     </button>
                   </>
                 ) : (
-                  <Link href="/login" className="text-sm font-medium px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                  <button
+                    onClick={onLoginClick}
+                    className="text-sm font-medium px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                  >
                     Sign In
-                  </Link>
+                  </button>
                 )}
               </>
             )}
