@@ -11,7 +11,7 @@ interface ProjectCardProps {
   name: string;
   tagline: string;
   description: string;
-  image: string | null;
+  image: string;
   category: string;
   color: string;
 }
