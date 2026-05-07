@@ -26,15 +26,23 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
     try {
       if (mode === 'signin') {
-        const { error } = await signIn(email, password);
-        if (error) {
-          setError(error.message);
-        } else {
-          setEmail('');
-          setPassword('');
-          onClose();
-          router.refresh();
+        // Use server-side API endpoint to set cookies with .asix.live domain
+        const response = await fetch('/api/auth/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          setError(data.error || 'Sign in failed');
+          return;
         }
+
+        setEmail('');
+        setPassword('');
+        onClose();
+        router.refresh();
       } else {
         // Sign up mode
         if (password !== confirmPassword) {
