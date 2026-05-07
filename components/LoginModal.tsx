@@ -48,7 +48,10 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
         onClose();
 
         // Refresh page to pick up new auth state
-        window.location.reload();
+        console.log('Signin successful, reloading page...');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 500);
       } else {
         // Sign up mode
         if (password !== confirmPassword) {
