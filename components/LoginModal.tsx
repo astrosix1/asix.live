@@ -26,32 +26,37 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
     try {
       if (mode === 'signin') {
-        // Use server-side API endpoint to set cookies with .asix.live domain
-        const response = await fetch('/api/auth/signin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-          credentials: 'include', // Include cookies in request/response
-        });
+        try {
+          // Use server-side API endpoint to set cookies with .asix.live domain
+          console.log('Starting signin...');
+          const response = await fetch('/api/auth/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
 
-        const data = await response.json();
+          console.log('Signin response status:', response.status);
+          const data = await response.json();
+          console.log('Signin response data:', data);
 
-        if (!response.ok || !data.success) {
-          setError(data.error || 'Sign in failed');
-          return;
+          if (!response.ok) {
+            setError(data.error || 'Sign in failed');
+            return;
+          }
+
+          // Signin succeeded - clear form and redirect
+          setEmail('');
+          setPassword('');
+          setError(null);
+          console.log('Signin successful, redirecting...');
+
+          // Redirect to home which will pick up the new cookies
+          onClose();
+          router.refresh();
+        } catch (err) {
+          console.error('Signin error:', err);
+          setError('An error occurred. Please try again.');
         }
-
-        // Signin succeeded - reset form and close modal
-        setEmail('');
-        setPassword('');
-        setError(null);
-        onClose();
-
-        // Refresh page to pick up new auth state
-        console.log('Signin successful, reloading page...');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 500);
       } else {
         // Sign up mode
         if (password !== confirmPassword) {
