@@ -11,14 +11,34 @@ export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-subdomain', subdomain || 'main');
 
-  // The auth-helpers client in createBrowserClient already handles cookie persistence
-  // Middleware just needs to pass through auth state
-  // Cookies set by Supabase will be automatically included in requests
+  // Create response
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  // Fix Set-Cookie domain for cross-subdomain sharing in production
+  // Rewrite all sb-* cookies to use .asix.live domain (with leading dot)
+  const setCookieHeader = response.headers.getSetCookie();
+
+  if (setCookieHeader.length > 0 && !host.includes('localhost')) {
+    // Clear existing Set-Cookie headers
+    response.headers.delete('Set-Cookie');
+
+    // Rewrite and add back with correct domain
+    setCookieHeader.forEach((cookie) => {
+      if (cookie.includes('sb-')) {
+        // Add .asix.live domain if not already present
+        const updatedCookie = cookie.includes('Domain=')
+          ? cookie.replace(/Domain=[^;]*/g, 'Domain=.asix.live')
+          : cookie + '; Domain=.asix.live';
+        response.headers.append('Set-Cookie', updatedCookie);
+      } else {
+        response.headers.append('Set-Cookie', cookie);
+      }
+    });
+  }
 
   return response;
 }

@@ -43,13 +43,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // Use server-side API route to sign in (sets httpOnly cookies with .asix.live domain)
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error) {
-        setError(error.message);
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || 'Login failed');
         return;
       }
 

@@ -10,10 +10,10 @@ export const PROJECTS = {
       'Ascend is a social fitness app designed to help you break bad habits by building positive ones. Compete with friends, track your progress, and celebrate wins together.',
     icon: '🚀',
     color: '#3B82F6', // Blue
-    image: '/images/projects/ascend.jpg',
+    image: '/images/projects/ascend-dashboard.png',
     category: 'Social & Wellness',
     iframeUrl: null, // Hosted at subdomain
-    externalUrl: 'https://ascend.asixstud.io/', // Subdomain URL
+    externalUrl: 'https://ascend.asix.live/', // Subdomain URL
     features: [
       'Habit replacement tracking',
       'Competitive leaderboards',

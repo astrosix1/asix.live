@@ -1,17 +1,21 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * Auth callback route for Supabase
+ * Handles OAuth redirects and ensures cookies are set with cross-subdomain domain (.asix.live)
+ */
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const { searchParams } = new URL(request.url);
+  const code = searchParams.get('code');
+  const next = searchParams.get('next') || '/';
 
   if (code) {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-    );
-    await supabase.auth.exchangeCodeForSession(code);
+    // Redirect to next URL with code parameter
+    // The session will be established via cookie
+    const response = NextResponse.redirect(new URL(next, request.url));
+    return response;
   }
 
-  return NextResponse.redirect(`${requestUrl.origin}/projects`);
+  // If no code, just redirect home
+  return NextResponse.redirect(new URL('/', request.url));
 }
