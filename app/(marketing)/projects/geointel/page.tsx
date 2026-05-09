@@ -97,7 +97,12 @@ export default function GeoIntelProject() {
             Discover what's happening around the world with GeoIntel's interactive globe.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LaunchGeoIntelButton />
+            <Link href="https://geointel.asix.live" target="_blank">
+              <Button size="lg" className="gap-2">
+                Launch GeoIntel
+                <ArrowRight size={18} />
+              </Button>
+            </Link>
             <Link href="/contact">
               <Button size="lg" variant="outline">
                 Get in Touch
