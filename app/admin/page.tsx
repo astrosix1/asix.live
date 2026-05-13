@@ -16,10 +16,21 @@ export default function AdminPage() {
           <p className="text-gray-600">Add, edit, or remove projects from your portfolio</p>
         </Link>
 
-        <div className="p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <h2 className="text-2xl font-bold mb-2 text-gray-900">More Options</h2>
-          <p className="text-gray-600">User management, analytics, and more coming soon</p>
-        </div>
+        <Link
+          href="/admin/blog"
+          className="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer"
+        >
+          <h2 className="text-2xl font-bold mb-2 text-gray-900">Manage Blog</h2>
+          <p className="text-gray-600">Write, edit, or publish blog posts and announcements</p>
+        </Link>
+
+        <Link
+          href="/admin/blog/new"
+          className="block p-6 bg-blue-600 rounded-lg shadow hover:bg-blue-700 transition-colors cursor-pointer"
+        >
+          <h2 className="text-2xl font-bold mb-2 text-white">+ New Blog Post</h2>
+          <p className="text-blue-100">Jump straight into writing a new post</p>
+        </Link>
       </div>
     </div>
   );

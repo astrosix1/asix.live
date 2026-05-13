@@ -45,6 +45,9 @@ export function Navbar({ onLoginClick }: NavbarProps) {
             <Link href="/projects" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               Projects
             </Link>
+            <Link href="/blog" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              Blog
+            </Link>
             {!loading && (
               <>
                 {user ? (
@@ -96,6 +99,13 @@ export function Navbar({ onLoginClick }: NavbarProps) {
               onClick={() => setMobileMenuOpen(false)}
             >
               Projects
+            </Link>
+            <Link
+              href="/blog"
+              className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-2 py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Blog
             </Link>
             {!loading && (
               <>

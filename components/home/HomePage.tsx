@@ -1,10 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, easeInOut } from 'framer-motion';
 import {
   CheckCircle, Globe, ArrowRight, Shield, TrendingUp,
 } from 'lucide-react';
+import { getFeaturedPosts } from '@/lib/blog';
+import type { BlogListItem } from '@/types/blog';
+import BlogCard from '@/components/blog/BlogCard';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -32,6 +36,12 @@ const floatDelay = (delay: number) => ({
 });
 
 export function HomePage() {
+  const [featuredPosts, setFeaturedPosts] = useState<BlogListItem[]>([]);
+
+  useEffect(() => {
+    getFeaturedPosts(3).then(setFeaturedPosts).catch(() => {});
+  }, []);
+
   const handleExploreScroll = () => {
     const element = document.getElementById('section-ascend');
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -307,6 +317,48 @@ export function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      {/* ─── SECTION: LATEST FROM BLOG ─── */}
+      {featuredPosts.length > 0 && (
+        <section className="bg-[#0F172A] py-20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={stagger}
+            >
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center justify-between mb-10"
+              >
+                <div>
+                  <p className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-2">
+                    From the Blog
+                  </p>
+                  <h2 className="text-3xl font-bold text-white">
+                    Latest Writing
+                  </h2>
+                </div>
+                <Link
+                  href="/blog"
+                  className="text-blue-400 text-sm font-medium hover:text-blue-300 transition-colors flex items-center gap-1"
+                >
+                  View all
+                  <ArrowRight size={14} />
+                </Link>
+              </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {featuredPosts.map((post) => (
+                  <motion.div key={post.id} variants={fadeUp}>
+                    <BlogCard post={post} />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* ─── SECTION 5: FINAL CTA ─── */}
       <section className="bg-gradient-to-b from-[#111827] to-[#1F2937] py-24 overflow-hidden relative">

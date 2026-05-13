@@ -36,6 +36,32 @@ CREATE POLICY "Authenticated users can delete projects"
   ON projects FOR DELETE
   USING (auth.role() = 'authenticated');
 
+-- Blog posts table
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  content TEXT NOT NULL,
+  author TEXT NOT NULL,
+  cover_image TEXT,
+  tags TEXT[] DEFAULT '{}',
+  published BOOLEAN DEFAULT false,
+  featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Published posts are readable by all"
+  ON blog_posts FOR SELECT
+  USING (published = true);
+
+CREATE POLICY "Authors can manage their posts"
+  ON blog_posts FOR ALL
+  USING (auth.uid() IS NOT NULL);
+
 -- Insert Ascend as first project
 INSERT INTO projects (name, slug, description, external_url, tech_stack, is_published)
 VALUES (
