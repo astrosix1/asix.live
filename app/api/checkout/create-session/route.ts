@@ -32,9 +32,17 @@ export async function POST(req: NextRequest) {
     // Build line items for Stripe
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
+    // Server-side allowlist — prevents clients from injecting arbitrary slugs/plans
+    const VALID_SLUGS = new Set(['basic', 'ascend', 'geointel']);
+    const VALID_PLANS = new Set(['free', 'pro']);
+
     console.log('Building line items...');
     for (const item of items) {
       console.log(`Processing item: ${item.appSlug}`);
+      if (!VALID_SLUGS.has(item.appSlug) || !VALID_PLANS.has(item.plan)) {
+        console.log(`Invalid product: ${item.appSlug}/${item.plan}`);
+        return NextResponse.json({ error: 'Invalid product selection' }, { status: 400 });
+      }
       const priceId = getStripePriceId(item.appSlug, item.plan);
       console.log(`Price ID for ${item.appSlug}: ${priceId}`);
       if (!priceId) {

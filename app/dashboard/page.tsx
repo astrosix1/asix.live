@@ -66,7 +66,12 @@ export default function DashboardPage() {
   }, [user]);
 
   const handleSignOut = async () => {
-    try { await signOut(); redirect('/'); } catch { /* ignore */ }
+    try {
+      await signOut();
+    } catch {
+      // signOut failure is non-fatal — proceed with redirect regardless
+    }
+    redirect('/');
   };
 
   if (loading || (!user && !loading)) {
