@@ -7,6 +7,7 @@ import { ArrowRight, LogOut, Package, X } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
 import { AppCard } from '@/components/dashboard/AppCard';
 import { SubscriptionManager } from '@/components/dashboard/SubscriptionManager';
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
 import { signOut } from '@/lib/auth';
 
 interface DashboardSubscription {
@@ -124,14 +125,7 @@ export default function DashboardPage() {
   };
 
   if (loading || (!user && !loading)) {
-    return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="w-10 h-10 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
-          <p className="text-slate-400 text-sm">Loading your dashboard…</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (!user) return null;
