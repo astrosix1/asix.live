@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowRight, LogOut, Package } from 'lucide-react';
+import { ArrowRight, LogOut, Package, X } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
 import { AppCard } from '@/components/dashboard/AppCard';
 import { SubscriptionManager } from '@/components/dashboard/SubscriptionManager';
@@ -41,6 +41,9 @@ export default function DashboardPage() {
   const [subscriptions, setSubscriptions] = useState<DashboardSubscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [cancelConfirm, setCancelConfirm] = useState<DashboardSubscription | null>(null);
+  const [cancelSuccess, setCancelSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) redirect('/login?redirect=/dashboard');
@@ -74,6 +77,52 @@ export default function DashboardPage() {
     redirect('/');
   };
 
+  const handleCancelSubscription = async (sub: DashboardSubscription) => {
+    try {
+      setCancellingId(sub.id);
+      const res = await fetch('/api/checkout/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscriptionId: sub.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to cancel');
+      // Update local state to reflect pending cancellation
+      setSubscriptions(prev => prev.map(s =>
+        s.id === sub.id ? { ...s, cancelAtPeriodEnd: true } as any : s
+      ));
+      setCancelSuccess(`${sub.projectName} will be cancelled at the end of your billing period.`);
+      setCancelConfirm(null);
+      setTimeout(() => setCancelSuccess(null), 6000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to cancel subscription');
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
+  const handleReactivate = async (sub: DashboardSubscription) => {
+    try {
+      setCancellingId(sub.id);
+      const res = await fetch('/api/checkout/cancel-subscription', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscriptionId: sub.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to reactivate');
+      setSubscriptions(prev => prev.map(s =>
+        s.id === sub.id ? { ...s, cancelAtPeriodEnd: false } as any : s
+      ));
+      setCancelSuccess(`${sub.projectName} subscription reactivated!`);
+      setTimeout(() => setCancelSuccess(null), 4000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reactivate subscription');
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
   if (loading || (!user && !loading)) {
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
@@ -94,6 +143,46 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#0F172A]">
+
+      {/* ── CANCEL CONFIRMATION MODAL ──────────────────────────────────────── */}
+      {cancelConfirm && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1E293B] border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Cancel Subscription?</h3>
+              <button onClick={() => setCancelConfirm(null)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+            </div>
+            <p className="text-slate-300 text-sm mb-2">
+              You&apos;re about to cancel <strong className="text-white">{cancelConfirm.projectName}</strong>.
+            </p>
+            <p className="text-slate-400 text-sm mb-6">
+              You&apos;ll keep access until the end of your current billing period. No charges after that. You can reactivate anytime before then.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setCancelConfirm(null)}
+                className="flex-1 px-4 py-2.5 border border-slate-600 text-slate-300 rounded-lg text-sm font-medium hover:border-slate-500 transition-colors"
+              >
+                Keep Subscription
+              </button>
+              <button
+                onClick={() => handleCancelSubscription(cancelConfirm)}
+                disabled={cancellingId === cancelConfirm.id}
+                className="flex-1 px-4 py-2.5 bg-red-500/20 border border-red-500/50 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-colors disabled:opacity-50"
+              >
+                {cancellingId === cancelConfirm.id ? 'Cancelling…' : 'Yes, Cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── SUCCESS BANNER ─────────────────────────────────────────────────── */}
+      {cancelSuccess && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm px-6 py-3 rounded-xl shadow-xl backdrop-blur-sm">
+          ✓ {cancelSuccess}
+        </div>
+      )}
 
       {/* ── HEADER ─────────────────────────────────────────────────────────── */}
       <div className="bg-[#111827] border-b border-slate-800">
@@ -175,6 +264,44 @@ export default function DashboardPage() {
             }))}
             isLoading={isLoading}
           />
+
+          {/* Cancel / Reactivate controls */}
+          {!isLoading && subscriptions.length > 0 && (
+            <div className="mt-6 space-y-3">
+              {subscriptions.filter(s => s.status === 'active').map(sub => {
+                const isPendingCancel = (sub as any).cancelAtPeriodEnd;
+                return (
+                  <div key={sub.id} className="flex items-center justify-between p-4 bg-[#1E293B] border border-slate-700 rounded-xl">
+                    <div>
+                      <p className="text-white text-sm font-medium">{sub.projectName}</p>
+                      {isPendingCancel ? (
+                        <p className="text-amber-400 text-xs mt-0.5">Cancels at end of billing period</p>
+                      ) : (
+                        <p className="text-slate-400 text-xs mt-0.5">Active · renews {sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd).toLocaleDateString() : '—'}</p>
+                      )}
+                    </div>
+                    {isPendingCancel ? (
+                      <button
+                        onClick={() => handleReactivate(sub)}
+                        disabled={cancellingId === sub.id}
+                        className="px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+                      >
+                        {cancellingId === sub.id ? 'Reactivating…' : 'Reactivate'}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setCancelConfirm(sub)}
+                        disabled={cancellingId === sub.id}
+                        className="px-3 py-1.5 text-slate-400 border border-slate-600 rounded-lg text-xs font-medium hover:text-red-400 hover:border-red-500/50 transition-colors disabled:opacity-50"
+                      >
+                        Cancel plan
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* ── EXPLORE ────────────────────────────────────────────────────── */}
