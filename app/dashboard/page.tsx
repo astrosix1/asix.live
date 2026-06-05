@@ -8,6 +8,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { AppCard } from '@/components/dashboard/AppCard';
 import { SubscriptionManager } from '@/components/dashboard/SubscriptionManager';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
+import { AnalyticsDashboard } from '@/components/dashboard/AnalyticsDashboard';
 import { signOut } from '@/lib/auth';
 
 interface DashboardSubscription {
@@ -321,6 +322,17 @@ export default function DashboardPage() {
                 </Link>
               ))}
             </div>
+          </section>
+        )}
+
+        {/* ── ANALYTICS ───────────────────────────────────────────────────── */}
+        {!isLoading && subscriptions.length > 0 && (
+          <section>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white">Analytics</h2>
+              <p className="text-slate-400 text-sm mt-1">View usage metrics across your apps</p>
+            </div>
+            <AnalyticsDashboard />
           </section>
         )}
 
