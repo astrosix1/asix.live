@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { signUp } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -18,7 +17,6 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,41 +26,31 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     try {
       if (mode === 'signin') {
         try {
-          // Use server-side API endpoint to set cookies with .asix.live domain
-          console.log('Starting signin...');
-          const response = await fetch('/api/auth/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-
-          console.log('Signin response status:', response.status);
-          const data = await response.json();
-          console.log('Signin response data:', data);
-
-          if (!response.ok) {
-            setError(data.error || 'Sign in failed');
+          if (!supabase) {
+            setError('Auth not configured. Please try again later.');
             return;
           }
 
-          // Set the session client-side so CrossDomainCookieStorage writes
-          // a readable cookie with Domain=.asix.live (httpOnly cookies can't
-          // be read by JavaScript, so we need this readable version too)
-          if (supabase && data.access_token && data.refresh_token) {
-            await supabase.auth.setSession({
-              access_token: data.access_token,
-              refresh_token: data.refresh_token,
-            });
-            console.log('Session set in browser client with cross-domain cookie');
+          // Sign in directly on the client — CrossDomainCookieStorage
+          // automatically sets domain=.asix.live so the session cookie is
+          // readable across all subdomains. No API route needed.
+          const { data, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (signInError) {
+            setError(signInError.message);
+            return;
           }
 
-          // Signin succeeded - clear form and redirect
-          setEmail('');
-          setPassword('');
-          setError(null);
-          console.log('Signin successful, redirecting...');
+          if (!data.session) {
+            setError('Sign in failed — no session returned.');
+            return;
+          }
 
-          // Full reload so AuthProvider remounts and reads the new session cookies
+          // Session is now stored in readable cross-domain cookie.
+          // Hard redirect so AuthProvider remounts and picks it up.
           onClose();
           window.location.href = '/dashboard';
         } catch (err) {
