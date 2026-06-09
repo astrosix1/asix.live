@@ -62,9 +62,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
           setError(null);
           console.log('Signin successful, redirecting...');
 
-          // Redirect to home which will pick up the new cookies
+          // Full reload so AuthProvider remounts and reads the new session cookies
           onClose();
-          router.refresh();
+          window.location.href = '/dashboard';
         } catch (err) {
           console.error('Signin error:', err);
           setError('An error occurred. Please try again.');
