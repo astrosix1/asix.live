@@ -10,6 +10,7 @@ import { SubscriptionManager } from '@/components/dashboard/SubscriptionManager'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
 import { AnalyticsDashboard } from '@/components/dashboard/AnalyticsDashboard';
 import { signOut } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 
 interface DashboardSubscription {
   id: string;
@@ -47,6 +48,19 @@ export default function DashboardPage() {
   const [cancelConfirm, setCancelConfirm] = useState<DashboardSubscription | null>(null);
   const [cancelSuccess, setCancelSuccess] = useState<string | null>(null);
 
+  // Build auth headers with a FRESH access token. getSession() refreshes an
+  // expired token, so we don't send a stale one (which the server rejects = 401).
+  const getAuthHeaders = async (): Promise<Record<string, string>> => {
+    let token = session?.access_token;
+    if (supabase) {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data.session?.access_token) token = data.session.access_token;
+      } catch { /* fall back to context token */ }
+    }
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   useEffect(() => {
     if (!loading && !user) redirect('/login?redirect=/dashboard');
   }, [user, loading]);
@@ -58,12 +72,13 @@ export default function DashboardPage() {
         setIsLoading(true);
         setError(null);
         const res = await fetch('/api/dashboard/subscriptions', {
-          headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+          headers: await getAuthHeaders(),
         });
-        if (!res.ok) throw new Error('Failed to fetch subscriptions');
+        if (!res.ok) throw new Error(`Failed to fetch subscriptions (HTTP ${res.status})`);
         const data = await res.json();
         setSubscriptions(data.subscriptions || []);
-      } catch {
+      } catch (err) {
+        console.error('[Dashboard] subscriptions load failed:', err);
         setError('Failed to load subscriptions. Please try again.');
       } finally {
         setIsLoading(false);
@@ -88,7 +103,7 @@ export default function DashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(await getAuthHeaders()),
         },
         body: JSON.stringify({ subscriptionId: sub.id }),
       });
@@ -115,7 +130,7 @@ export default function DashboardPage() {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(await getAuthHeaders()),
         },
         body: JSON.stringify({ subscriptionId: sub.id }),
       });
