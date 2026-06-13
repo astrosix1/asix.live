@@ -24,11 +24,14 @@ interface DashboardSubscription {
   externalUrl: string | null;
 }
 
+// Admin email list — these users see all products as active regardless of DB subscriptions
+const ADMIN_EMAILS = ['collins.nick999@gmail.com'];
+
 // Available products — used to build the Explore section
 const ALL_PRODUCTS = [
-  { slug: 'ascend',   name: 'Ascend',   icon: '⚡', tagline: 'Replace addictions with hobbies', accent: 'text-amber-400', border: 'hover:border-amber-800/60' },
-  { slug: 'geointel', name: 'GeoIntel', icon: '🌍', tagline: 'Live world events on a 3D globe',  accent: 'text-teal-400',   border: 'hover:border-teal-800/60'   },
-  { slug: 'wikihole', name: 'WikiHole', icon: '🕳️', tagline: 'The rabbit hole that sticks',      accent: 'text-orange-400', border: 'hover:border-orange-800/60' },
+  { slug: 'ascend',   name: 'Ascend',   icon: '⚡', tagline: 'Replace addictions with hobbies', accent: 'text-amber-400', border: 'hover:border-amber-800/60', externalUrl: 'https://ascend.asix.live/'   },
+  { slug: 'geointel', name: 'GeoIntel', icon: '🌍', tagline: 'Live world events on a 3D globe',  accent: 'text-teal-400',   border: 'hover:border-teal-800/60',   externalUrl: 'https://geointel.asix.live/' },
+  { slug: 'wikihole', name: 'WikiHole', icon: '🕳️', tagline: 'The rabbit hole that sticks',      accent: 'text-orange-400', border: 'hover:border-orange-800/60', externalUrl: 'https://wikihole.asix.live/' },
 ];
 
 function getGreeting() {
@@ -154,8 +157,24 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const activeSubscriptions  = subscriptions.filter((s) => s.status === 'active');
-  const subscribedSlugs      = new Set(subscriptions.map((s) => s.projectSlug));
+  // Admin override — build synthetic "active" entries for every product so the
+  // admin always sees the full suite in "Your Apps", regardless of DB rows.
+  const isAdmin = ADMIN_EMAILS.includes(user.email ?? '');
+  const adminSubscriptions: DashboardSubscription[] = ALL_PRODUCTS.map((p) => ({
+    id: `admin-${p.slug}`,
+    projectSlug: p.slug,
+    projectName: p.name,
+    appIcon: p.icon,
+    appColor: undefined,
+    plan: 'Admin',
+    status: 'active',
+    currentPeriodEnd: null,
+    externalUrl: p.externalUrl,
+  }));
+
+  const displaySubscriptions = isAdmin ? adminSubscriptions : subscriptions;
+  const activeSubscriptions  = displaySubscriptions.filter((s) => s.status === 'active');
+  const subscribedSlugs      = new Set(displaySubscriptions.map((s) => s.projectSlug));
   const exploreProducts      = ALL_PRODUCTS.filter((p) => !subscribedSlugs.has(p.slug));
   const displayName          = user.user_metadata?.first_name || user.email?.split('@')[0] || 'there';
 
@@ -272,7 +291,7 @@ export default function DashboardPage() {
             <p className="text-slate-400 text-sm mt-1">Manage your plans and billing</p>
           </div>
           <SubscriptionManager
-            subscriptions={subscriptions.map((s) => ({
+            subscriptions={displaySubscriptions.map((s) => ({
               id: s.id,
               plan: s.plan,
               status: s.status,
@@ -283,8 +302,8 @@ export default function DashboardPage() {
             isLoading={isLoading}
           />
 
-          {/* Cancel / Reactivate controls */}
-          {!isLoading && subscriptions.length > 0 && (
+          {/* Cancel / Reactivate controls — hidden for admin synthetic entries */}
+          {!isLoading && !isAdmin && subscriptions.length > 0 && (
             <div className="mt-6 space-y-3">
               {subscriptions.filter(s => s.status === 'active').map(sub => {
                 const isPendingCancel = (sub as any).cancelAtPeriodEnd;
@@ -349,7 +368,7 @@ export default function DashboardPage() {
         )}
 
         {/* ── ANALYTICS ───────────────────────────────────────────────────── */}
-        {!isLoading && subscriptions.length > 0 && (
+        {!isLoading && displaySubscriptions.length > 0 && (
           <section>
             <div className="mb-6">
               <h2 className="text-xl font-bold text-white">Analytics</h2>
@@ -404,7 +423,7 @@ export default function DashboardPage() {
         </section>
 
         {/* ── EMPTY STATE ────────────────────────────────────────────────── */}
-        {!isLoading && subscriptions.length === 0 && (
+        {!isLoading && displaySubscriptions.length === 0 && (
           <section className="bg-[#1E293B] rounded-xl border border-slate-700/60 p-12 text-center">
             <Package size={40} className="text-slate-600 mx-auto mb-4" />
             <h3 className="text-lg font-bold text-white mb-2">No subscriptions yet</h3>
