@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 /**
@@ -30,4 +31,32 @@ export async function getSupabaseServer() {
       },
     }
   );
+}
+
+/**
+ * Create a Supabase client scoped to a user's access token (Bearer).
+ * Both auth.getUser() and RLS-protected queries run as that user.
+ */
+function getSupabaseFromToken(token: string) {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+    {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    }
+  );
+}
+
+/**
+ * Resolve a Supabase client for an API route. The browser client persists the
+ * session in localStorage (not cookies), so it sends the access token as a
+ * Bearer header; prefer that, and fall back to the cookie-based server client.
+ */
+export async function getSupabaseFromRequest(request: Request) {
+  const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    return getSupabaseFromToken(authHeader.slice(7));
+  }
+  return getSupabaseServer();
 }

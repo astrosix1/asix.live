@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase-server';
+import { getSupabaseFromRequest } from '@/lib/supabase-server';
 import { getProject } from '@/lib/get-project';
 
 /**
@@ -10,8 +10,8 @@ import { getProject } from '@/lib/get-project';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get server-side Supabase client
-    const supabase = await getSupabaseServer();
+    // Resolve client from the request's Bearer token (localStorage auth), with cookie fallback
+    const supabase = await getSupabaseFromRequest(request);
 
     // Check authentication using server-side auth
     const { data: { user }, error: authError } = await supabase.auth.getUser();

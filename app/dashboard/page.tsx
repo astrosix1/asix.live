@@ -39,7 +39,7 @@ function getGreeting() {
 }
 
 export default function DashboardPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, session } = useAuth();
   const [subscriptions, setSubscriptions] = useState<DashboardSubscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +57,9 @@ export default function DashboardPage() {
       try {
         setIsLoading(true);
         setError(null);
-        const res = await fetch('/api/dashboard/subscriptions');
+        const res = await fetch('/api/dashboard/subscriptions', {
+          headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+        });
         if (!res.ok) throw new Error('Failed to fetch subscriptions');
         const data = await res.json();
         setSubscriptions(data.subscriptions || []);
@@ -84,7 +86,10 @@ export default function DashboardPage() {
       setCancellingId(sub.id);
       const res = await fetch('/api/checkout/cancel-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ subscriptionId: sub.id }),
       });
       const data = await res.json();
@@ -108,7 +113,10 @@ export default function DashboardPage() {
       setCancellingId(sub.id);
       const res = await fetch('/api/checkout/cancel-subscription', {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ subscriptionId: sub.id }),
       });
       const data = await res.json();

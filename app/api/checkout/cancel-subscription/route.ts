@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getSupabaseServer } from '@/lib/supabase-server';
+import { getSupabaseFromRequest } from '@/lib/supabase-server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-02-24.acacia',
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify the user is authenticated
-    const supabase = await getSupabaseServer();
+    const supabase = await getSupabaseFromRequest(req);
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
@@ -90,7 +90,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Missing subscriptionId' }, { status: 400 });
     }
 
-    const supabase = await getSupabaseServer();
+    const supabase = await getSupabaseFromRequest(req);
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
