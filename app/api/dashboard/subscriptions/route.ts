@@ -24,19 +24,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch user's subscriptions from Supabase (using server-side client)
+    // Fetch user's subscriptions (no join — avoids PGRST200 when the FK is
+    // not explicitly declared in Supabase's schema cache).
     const { data: subscriptions, error: subscriptionError } = await supabase
       .from('subscriptions')
-      .select(`
-        *,
-        projects:project_id (
-          id,
-          name,
-          slug,
-          description,
-          subdomain_url
-        )
-      `)
+      .select('*')
       .eq('user_id', user.id);
 
     if (subscriptionError) {
@@ -44,17 +36,34 @@ export async function GET(request: NextRequest) {
       throw subscriptionError;
     }
 
+    // Look up project slugs/names from the projects table (best-effort).
+    // If the projects table doesn't exist or the query fails we fall back to
+    // local project-config which has all current project metadata.
+    const projectIds = [...new Set((subscriptions ?? []).map((s: any) => s.project_id).filter(Boolean))];
+    const projectsMap: Record<string, { slug: string; name: string }> = {};
+    if (projectIds.length > 0) {
+      const { data: dbProjects } = await supabase
+        .from('projects')
+        .select('id, slug, name')
+        .in('id', projectIds);
+      (dbProjects ?? []).forEach((p: any) => {
+        projectsMap[p.id] = { slug: p.slug, name: p.name };
+      });
+    }
+
     // Enhance subscriptions with project details from local config
-    const enrichedSubscriptions = subscriptions.map((sub: any) => {
-      // Get project from local config for UI details (icon, color, etc)
-      const project = getProject(sub.projects?.slug);
+    const enrichedSubscriptions = (subscriptions ?? []).map((sub: any) => {
+      const dbProject = projectsMap[sub.project_id];
+      // Prefer DB-derived slug; fall back to any slug stored directly on the row
+      const slug = dbProject?.slug ?? sub.project_slug ?? sub.slug ?? '';
+      const project = getProject(slug);
 
       return {
         id: sub.id,
         userId: sub.user_id,
         projectId: sub.project_id,
-        projectSlug: sub.projects?.slug || 'unknown',
-        projectName: sub.projects?.name || 'Unknown Project',
+        projectSlug: slug || 'unknown',
+        projectName: dbProject?.name ?? project?.name ?? 'Unknown Project',
         plan: sub.plan,
         status: sub.status,
         stripeSubscriptionId: sub.stripe_subscription_id,
