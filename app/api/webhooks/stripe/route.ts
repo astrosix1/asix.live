@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import {
   updateSubscriptionFromStripe,
   cancelSubscription,
+  markSubscriptionPastDue,
   logStripeEvent,
 } from '@/lib/subscriptions';
 
@@ -73,8 +74,8 @@ export async function POST(req: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice;
         if (invoice.subscription) {
           const subscriptionId = invoice.subscription as string;
-          // Could update subscription status to 'past_due' here if needed
-          console.log('Payment failed for subscription:', subscriptionId);
+          await markSubscriptionPastDue(subscriptionId);
+          console.log('Marked past_due for subscription:', subscriptionId);
         }
         break;
       }

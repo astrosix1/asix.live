@@ -17,8 +17,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "asix - Project Portfolio",
-  description: "A collection of creative projects showcasing web development and design.",
+  title: "Asix — Habit Tracking, Geopolitical Intelligence, and More",
+  description: "Asix builds tools that help you think clearly and act decisively. Home of Ascend (habit tracker), GeoIntel (geopolitical intelligence), and WikiHole.",
+  metadataBase: new URL("https://asix.live"),
+  openGraph: {
+    title: "Asix — Habit Tracking, Geopolitical Intelligence, and More",
+    description: "Asix builds tools that help you think clearly and act decisively. Home of Ascend (habit tracker), GeoIntel (geopolitical intelligence), and WikiHole.",
+    url: "https://asix.live",
+    siteName: "Asix",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Asix — Habit Tracking, Geopolitical Intelligence, and More",
+    description: "Asix builds tools that help you think clearly and act decisively. Home of Ascend, GeoIntel, and WikiHole.",
+  },
+  alternates: {
+    canonical: "https://asix.live",
+  },
 };
 
 export default async function RootLayout({

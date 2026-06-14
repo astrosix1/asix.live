@@ -155,6 +155,28 @@ export async function updateSubscriptionFromStripe(
 }
 
 /**
+ * Mark a subscription as past_due (from invoice.payment_failed webhook)
+ */
+export async function markSubscriptionPastDue(stripe_subscription_id: string) {
+  if (!supabase) {
+    throw new Error('Supabase not configured');
+  }
+
+  const { error } = await supabase
+    .from('subscriptions')
+    .update({
+      status: 'past_due',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('stripe_subscription_id', stripe_subscription_id);
+
+  if (error) {
+    console.error('Error marking subscription past_due:', error);
+    throw error;
+  }
+}
+
+/**
  * Cancel a subscription (from Stripe webhook)
  */
 export async function cancelSubscription(stripe_subscription_id: string) {
