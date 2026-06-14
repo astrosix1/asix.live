@@ -93,7 +93,7 @@ const PRICING = [
   },
   {
     name: 'GeoIntel',
-    price: '$99.99',
+    price: '$19',
     description: 'Professional-grade geopolitical intelligence for analysts and decision-makers.',
     features: ['Real-time event tracking', 'Interactive 3D globe', 'Threat assessment', 'Predictive analytics', 'Data export & API', 'Custom alerts'],
     cta: 'Explore GeoIntel',
