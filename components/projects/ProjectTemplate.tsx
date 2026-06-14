@@ -18,7 +18,15 @@ interface ProjectTemplateProps {
   projectSlug: 'ascend' | 'geointel' | 'wikihole';
   launchButtonComponent?: React.ReactNode;
   userHasAccess?: boolean;
+  isLoggedIn?: boolean;
 }
+
+// Price and checkout-plan per product
+const CHECKOUT_INFO = {
+  ascend:   { plan: 'ascend',   priceLabel: '$4.99/month', priceNote: '' },
+  geointel: { plan: 'geointel', priceLabel: '$19/month',   priceNote: '' },
+  wikihole: { plan: 'basic',    priceLabel: '$4.99/month', priceNote: 'Included in the Essentials plan' },
+} as const;
 
 // Per-product theme tokens
 const THEMES = {
@@ -197,6 +205,7 @@ export function ProjectTemplate({
   projectSlug,
   launchButtonComponent,
   userHasAccess = false,
+  isLoggedIn = false,
 }: ProjectTemplateProps) {
   const t = THEMES[projectSlug];
   const howItWorks = HOW_IT_WORKS[projectSlug];
@@ -328,17 +337,34 @@ export function ProjectTemplate({
               ? 'Unlock geopolitical intelligence and stay ahead of global events.'
               : 'Start exploring rabbit holes — included free in the Essentials plan.'}
           </p>
+
+          {/* Price — shown only to visitors who are not signed in */}
+          {!isLoggedIn && (
+            <div className="mb-8">
+              <p className="text-5xl font-bold text-white mb-1">
+                {CHECKOUT_INFO[projectSlug].priceLabel}
+              </p>
+              {CHECKOUT_INFO[projectSlug].priceNote && (
+                <p className="text-slate-400 text-sm mt-1">
+                  {CHECKOUT_INFO[projectSlug].priceNote}
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {launchButtonComponent ? (
-              launchButtonComponent
-            ) : (
-              <Link href="/checkout">
-                <button className="flex items-center gap-2 px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors">
+            {!isLoggedIn ? (
+              /* Logged-out visitor: Subscribe Now */
+              <Link href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}>
+                <button className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}>
                   Subscribe Now
                   <ArrowRight size={20} />
                 </button>
               </Link>
-            )}
+            ) : launchButtonComponent ? (
+              /* Logged-in subscriber: open the app */
+              launchButtonComponent
+            ) : null}
             <Link href="/contact">
               <button className="flex items-center gap-2 px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors">
                 Get in Touch
@@ -346,6 +372,10 @@ export function ProjectTemplate({
               </button>
             </Link>
           </div>
+
+          {!isLoggedIn && (
+            <p className="text-sm text-slate-500 mt-6">Cancel anytime. No hidden fees.</p>
+          )}
         </div>
       </section>
 

@@ -33,6 +33,7 @@ export function ProjectTemplateWrapper({
       projectSlug={projectSlug}
       launchButtonComponent={launchButtonComponent}
       userHasAccess={userHasAccess}
+      isLoggedIn={!!user}
     />
   );
 }
