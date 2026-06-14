@@ -1,6 +1,13 @@
 import { getProjectBySlugServer } from '@/lib/projects-server';
 import Link from 'next/link';
 
+// Maps product DB slug → checkout plan slug + display price
+const PLAN_INFO: Record<string, { checkoutPlan: string; priceLabel: string; priceNote?: string }> = {
+  ascend:   { checkoutPlan: 'ascend',   priceLabel: '$4.99/month' },
+  geointel: { checkoutPlan: 'geointel', priceLabel: '$19/month' },
+  wikihole: { checkoutPlan: 'basic',    priceLabel: '$4.99/month', priceNote: 'Included in the Essentials plan' },
+};
+
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   let project = null;
@@ -178,6 +185,26 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             </div>
           )}
         </div>
+
+        {/* ── PRICING CTA ──────────────────────────────────────────────── */}
+        {PLAN_INFO[project.slug] && (
+          <div className="py-16 border-t border-gray-200 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ready to subscribe?</h2>
+            {PLAN_INFO[project.slug].priceNote && (
+              <p className="text-gray-500 mb-3 text-sm">{PLAN_INFO[project.slug].priceNote}</p>
+            )}
+            <p className="text-5xl font-bold text-gray-900 mb-8">
+              {PLAN_INFO[project.slug].priceLabel}
+            </p>
+            <Link
+              href={`/checkout?plan=${PLAN_INFO[project.slug].checkoutPlan}`}
+              className="inline-block px-10 py-4 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors duration-200 text-lg"
+            >
+              Subscribe Now →
+            </Link>
+            <p className="text-sm text-gray-400 mt-4">Cancel anytime. No hidden fees.</p>
+          </div>
+        )}
       </div>
     </div>
   );

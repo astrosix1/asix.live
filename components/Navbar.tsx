@@ -40,9 +40,6 @@ export function Navbar({ onLoginClick }: NavbarProps) {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="/projects" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
-              Pricing
-            </Link>
-            <Link href="/projects" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               Projects
             </Link>
             <Link href="/blog" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
@@ -86,13 +83,6 @@ export function Navbar({ onLoginClick }: NavbarProps) {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-slate-200 py-4 space-y-3">
-            <Link
-              href="/projects"
-              className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-2 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Pricing
-            </Link>
             <Link
               href="/projects"
               className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-2 py-2"
