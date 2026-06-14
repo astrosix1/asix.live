@@ -10,7 +10,7 @@ export const APP_PRICES: Record<string, Record<string, number>> = {
   },
   geointel: {
     free: 0,
-    pro: 9999, // $99.99/month
+    pro: 1900, // $19.00/month
   },
 };
 

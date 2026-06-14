@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { APP_PRICES, formatPrice } from '@/lib/stripe-prices';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface CartItem {
@@ -16,12 +17,25 @@ export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [processing, setProcessing] = useState(false);
+  const searchParams = useSearchParams();
 
   const apps = [
     { slug: 'basic', name: 'Basic Tier', description: 'Access to small apps like WikiHole' },
     { slug: 'ascend', name: 'Ascend', description: 'Habit tracker and personal development' },
     { slug: 'geointel', name: 'GeoIntel', description: 'Geopolitical intelligence platform' },
   ];
+
+  // Pre-select the product named in ?plan= query param (e.g. from the pricing page)
+  useEffect(() => {
+    const plan = searchParams.get('plan');
+    if (!plan) return;
+    const app = apps.find((a) => a.slug === plan);
+    if (app && !cart.some((item) => item.appSlug === plan)) {
+      const price = APP_PRICES[plan]?.pro || 0;
+      setCart([{ appSlug: plan, appName: app.name, plan: 'pro', price }]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const addToCart = (appSlug: string, appName: string) => {
     const price = APP_PRICES[appSlug]?.pro || 0;
