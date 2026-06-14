@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { APP_PRICES, formatPrice } from '@/lib/stripe-prices';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface CartItem {
@@ -18,12 +18,22 @@ export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [processing, setProcessing] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const apps = [
     { slug: 'basic', name: 'Basic Tier', description: 'Access to small apps like WikiHole' },
     { slug: 'ascend', name: 'Ascend', description: 'Habit tracker and personal development' },
     { slug: 'geointel', name: 'GeoIntel', description: 'Geopolitical intelligence platform' },
   ];
+
+  // Redirect unauthenticated visitors to login, then back here with plan preserved
+  useEffect(() => {
+    if (!loading && !user) {
+      const plan = searchParams.get('plan');
+      const returnTo = plan ? `/checkout?plan=${plan}` : '/checkout';
+      router.replace(`/login?redirect=${encodeURIComponent(returnTo)}`);
+    }
+  }, [loading, user]);
 
   // Pre-select the product named in ?plan= query param (e.g. from the pricing page)
   useEffect(() => {
@@ -98,22 +108,10 @@ export default function CheckoutPage() {
   }
 
   if (!user) {
+    // Redirect is firing via useEffect above; show spinner while it happens
     return (
-      <div className="min-h-screen bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">Sign In to Subscribe</h1>
-            <p className="text-slate-600 mb-8">
-              Please sign in to your asix account to view subscriptions
-            </p>
-            <Link
-              href="/"
-              className="inline-block px-8 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
-            >
-              Go Home
-            </Link>
-          </div>
-        </div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-slate-600">Redirecting to sign in…</div>
       </div>
     );
   }
