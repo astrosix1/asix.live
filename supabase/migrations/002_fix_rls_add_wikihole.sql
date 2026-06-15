@@ -11,6 +11,6 @@ CREATE POLICY "Service role can manage subscriptions"
 
 -- Add WikiHole project so subscription lookups succeed for wikihole subscribers.
 -- The original migration only seeded ascend and geointel.
-INSERT INTO public.projects (name, slug, description, subdomain_url) VALUES
-  ('WikiHole', 'wikihole', 'Wikipedia rabbit hole explorer with spaced repetition', 'https://wikihole.asix.live/')
+INSERT INTO public.projects (name, slug, description) VALUES
+  ('WikiHole', 'wikihole', 'Wikipedia rabbit hole explorer with spaced repetition')
 ON CONFLICT (slug) DO NOTHING;
