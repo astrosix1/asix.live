@@ -14,7 +14,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
 
-  const redirectUri = searchParams.get('redirect') || '/';
+  // Only allow relative paths — reject anything that could redirect off-domain
+  const rawRedirect = searchParams.get('redirect') || '/';
+  const redirectUri = rawRedirect.startsWith('/') ? rawRedirect : '/';
 
   useEffect(() => {
     const sb = supabase;
@@ -52,16 +54,7 @@ export default function LoginPage() {
         });
       }
 
-      const isExternalRedirect = redirectUri.startsWith('http') &&
-        !redirectUri.includes('asix.live') === false &&
-        !redirectUri.startsWith(window.location.origin);
-
-      if (isExternalRedirect && data.access_token && data.refresh_token) {
-        const hash = `#access_token=${encodeURIComponent(data.access_token)}&refresh_token=${encodeURIComponent(data.refresh_token)}`;
-        window.location.href = redirectUri + hash;
-      } else {
-        router.push(redirectUri);
-      }
+      router.push(redirectUri);
     } catch {
       setError('An error occurred. Please try again.');
     } finally {
