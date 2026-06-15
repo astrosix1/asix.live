@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { supabaseAdmin } from './supabase-admin';
 
 export interface Subscription {
   id: string;
@@ -24,9 +25,6 @@ export interface Project {
   created_at: string;
 }
 
-/**
- * Get all subscriptions for a user
- */
 export async function getUserSubscriptions(userId: string) {
   if (!supabase) {
     throw new Error('Supabase not configured');
@@ -54,9 +52,6 @@ export async function getUserSubscriptions(userId: string) {
   return data || [];
 }
 
-/**
- * Get a specific subscription for user + project
- */
 export async function getProjectSubscription(
   userId: string,
   projectSlug: string
@@ -65,7 +60,6 @@ export async function getProjectSubscription(
     throw new Error('Supabase not configured');
   }
 
-  // First, get the project ID by slug
   const { data: projectData, error: projectError } = await supabase
     .from('projects')
     .select('id')
@@ -77,7 +71,6 @@ export async function getProjectSubscription(
     return null;
   }
 
-  // Then get the subscription
   const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
@@ -86,7 +79,6 @@ export async function getProjectSubscription(
     .maybeSingle();
 
   if (error && error.code !== 'PGRST116') {
-    // PGRST116 is "no rows returned" which is fine
     console.error('Error fetching subscription:', error);
     throw error;
   }
@@ -94,75 +86,73 @@ export async function getProjectSubscription(
   return data || null;
 }
 
-/**
- * Check if user has active subscription to a project
- */
 export async function hasActiveSubscription(
   userId: string,
   projectSlug: string
 ): Promise<boolean> {
   const subscription = await getProjectSubscription(userId, projectSlug);
-  return subscription !== null && subscription.status === 'active';
+  return subscription !== null && (subscription.status === 'active' || subscription.status === 'trialing');
 }
 
 /**
- * Update subscription from Stripe webhook
- * (Called from API route handler with service role)
+ * Upsert a subscription row from Stripe webhook or confirm-subscriptions API.
+ * Uses service role to bypass RLS — must only be called from server-side routes.
  */
-export async function updateSubscriptionFromStripe(
+export async function upsertSubscriptionFromStripe(
+  userId: string,
+  projectSlug: string,
   stripe_customer_id: string,
   stripe_subscription_id: string,
   plan: string,
   status: string,
   current_period_start: string | null,
-  current_period_end: string | null
+  current_period_end: string | null,
+  cancel_at_period_end: boolean,
 ) {
-  if (!supabase) {
-    throw new Error('Supabase not configured');
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client not configured');
   }
 
-  // Find user by stripe_customer_id
-  const { data: subscriptionData, error: subscriptionError } = await supabase
-    .from('subscriptions')
-    .select('id, user_id, project_id')
-    .eq('stripe_customer_id', stripe_customer_id)
+  const { data: project, error: projectError } = await supabaseAdmin
+    .from('projects')
+    .select('id')
+    .eq('slug', projectSlug)
     .single();
 
-  if (subscriptionError || !subscriptionData) {
-    console.error('Subscription not found for customer:', stripe_customer_id);
-    throw new Error('Subscription not found');
+  if (projectError || !project) {
+    throw new Error(`Unknown project slug: ${projectSlug}`);
   }
 
-  // Update subscription
-  const { error: updateError } = await supabase
+  const { error } = await supabaseAdmin
     .from('subscriptions')
-    .update({
-      stripe_subscription_id,
-      plan,
-      status,
-      current_period_start,
-      current_period_end,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', subscriptionData.id);
+    .upsert(
+      {
+        user_id: userId,
+        project_id: project.id,
+        stripe_subscription_id,
+        stripe_customer_id,
+        plan,
+        status,
+        current_period_start,
+        current_period_end,
+        cancel_at_period_end,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,project_id' }
+    );
 
-  if (updateError) {
-    console.error('Error updating subscription:', updateError);
-    throw updateError;
+  if (error) {
+    console.error('Error upserting subscription:', error);
+    throw error;
   }
-
-  return subscriptionData;
 }
 
-/**
- * Mark a subscription as past_due (from invoice.payment_failed webhook)
- */
 export async function markSubscriptionPastDue(stripe_subscription_id: string) {
-  if (!supabase) {
-    throw new Error('Supabase not configured');
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client not configured');
   }
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('subscriptions')
     .update({
       status: 'past_due',
@@ -176,15 +166,12 @@ export async function markSubscriptionPastDue(stripe_subscription_id: string) {
   }
 }
 
-/**
- * Cancel a subscription (from Stripe webhook)
- */
 export async function cancelSubscription(stripe_subscription_id: string) {
-  if (!supabase) {
-    throw new Error('Supabase not configured');
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client not configured');
   }
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('subscriptions')
     .update({
       status: 'canceled',
@@ -198,19 +185,16 @@ export async function cancelSubscription(stripe_subscription_id: string) {
   }
 }
 
-/**
- * Log Stripe webhook event (for debugging)
- */
 export async function logStripeEvent(
   stripe_event_id: string,
   event_type: string,
-  payload: any
+  payload: unknown
 ) {
-  if (!supabase) {
-    throw new Error('Supabase not configured');
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client not configured');
   }
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('stripe_events')
     .insert([
       {
@@ -223,6 +207,6 @@ export async function logStripeEvent(
 
   if (error) {
     console.error('Error logging Stripe event:', error);
-    // Don't throw - logging failure shouldn't break webhook processing
+    // Don't throw — logging failure shouldn't break webhook processing
   }
 }
