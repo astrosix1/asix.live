@@ -90,12 +90,12 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 text-sm">
           <p>&copy; {currentYear} asix.live. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">
+            <Link href="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
+            </Link>
+            <Link href="/terms" className="hover:text-white transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

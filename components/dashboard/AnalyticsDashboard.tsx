@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BarChart3, TrendingUp, Zap, Database } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 interface Analytics {
   period: string;
@@ -56,7 +57,11 @@ export function AnalyticsDashboard() {
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
-        const res = await fetch('/api/dashboard/analytics');
+        const { data: { session } } = await supabase!.auth.getSession();
+        const token = session?.access_token;
+        const res = await fetch('/api/dashboard/analytics', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         if (!res.ok) throw new Error('Failed to fetch analytics');
         const data = await res.json();
         setAnalytics(data);

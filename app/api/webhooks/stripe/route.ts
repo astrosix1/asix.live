@@ -14,11 +14,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
 // Maps Stripe price IDs to project slugs — must match lib/stripe-prices.ts
-const PRICE_TO_SLUG: Record<string, string> = {
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_BASIC || '']: 'wikihole',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_ASCEND || '']: 'ascend',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_GEOINTEL || '']: 'geointel',
-};
+// Built conditionally so missing env vars don't create a '' catch-all key.
+function buildPriceToSlug(): Record<string, string> {
+  const map: Record<string, string> = {};
+  const entries: [string | undefined, string][] = [
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_BASIC, 'wikihole'],
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_ASCEND, 'ascend'],
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_GEOINTEL, 'geointel'],
+  ];
+  for (const [priceId, slug] of entries) {
+    if (priceId) map[priceId] = slug;
+  }
+  return map;
+}
+const PRICE_TO_SLUG = buildPriceToSlug();
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -113,10 +122,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (err) {
-    console.error('Error processing webhook:', err);
-    return NextResponse.json(
-      { error: 'Failed to process webhook' },
-      { status: 500 }
-    );
+    // Return 200 so Stripe does not retry. Business-logic failures (DB errors,
+    // unknown IDs) are logged and monitored — retrying them won't help.
+    console.error('Webhook processing error (not retrying):', err);
+    return NextResponse.json({ received: true }, { status: 200 });
   }
 }

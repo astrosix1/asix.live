@@ -7,12 +7,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-02-24.acacia',
 });
 
-// Maps Stripe price IDs to project slugs
-const PRICE_TO_SLUG: Record<string, string> = {
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_BASIC || '']: 'wikihole',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_ASCEND || '']: 'ascend',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_GEOINTEL || '']: 'geointel',
-};
+// Maps Stripe price IDs to project slugs — built conditionally to avoid '' catch-all key.
+function buildPriceToSlug(): Record<string, string> {
+  const map: Record<string, string> = {};
+  const entries: [string | undefined, string][] = [
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_BASIC, 'wikihole'],
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_ASCEND, 'ascend'],
+    [process.env.NEXT_PUBLIC_STRIPE_PRICE_GEOINTEL, 'geointel'],
+  ];
+  for (const [priceId, slug] of entries) {
+    if (priceId) map[priceId] = slug;
+  }
+  return map;
+}
+const PRICE_TO_SLUG = buildPriceToSlug();
 
 export async function POST(req: NextRequest) {
   try {
@@ -66,8 +74,9 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      // Retrieve the actual Stripe subscription to get accurate period dates
+      // Retrieve the actual Stripe subscription to get accurate status and period dates
       let stripeSubscriptionId = '';
+      let stripeStatus = 'active';
       let periodStart: string | null = null;
       let periodEnd: string | null = null;
       let cancelAtPeriodEnd = false;
@@ -75,6 +84,7 @@ export async function POST(req: NextRequest) {
       if (session.subscription) {
         const sub = await stripe.subscriptions.retrieve(session.subscription as string);
         stripeSubscriptionId = sub.id;
+        stripeStatus = sub.status;
         periodStart = new Date(sub.current_period_start * 1000).toISOString();
         periodEnd = new Date(sub.current_period_end * 1000).toISOString();
         cancelAtPeriodEnd = sub.cancel_at_period_end;
@@ -86,7 +96,7 @@ export async function POST(req: NextRequest) {
         stripeCustomerId,
         stripeSubscriptionId,
         'pro',
-        'active',
+        stripeStatus,
         periodStart,
         periodEnd,
         cancelAtPeriodEnd,
@@ -102,9 +112,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error('Confirm subscriptions error:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to confirm subscriptions' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Subscription activation failed' }, { status: 500 });
   }
 }

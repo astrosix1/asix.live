@@ -1,8 +1,8 @@
 import ContactForm from '@/components/forms/ContactForm';
 
 export const metadata = {
-  title: 'Contact | asixstud.io',
-  description: 'Get in touch with us about our projects',
+  title: 'Contact | asix.live',
+  description: 'Get in touch with us about our products',
 };
 
 export default function Contact() {
@@ -33,10 +33,10 @@ export default function Contact() {
               <div>
                 <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Email</h3>
                 <a
-                  href="mailto:hello@asixstud.io"
+                  href="mailto:hello@asix.live"
                   className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
-                  hello@asixstud.io
+                  hello@asix.live
                 </a>
               </div>
 

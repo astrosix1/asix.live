@@ -1,41 +1,32 @@
-import { createClient } from '@supabase/supabase-js';
-import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user from session
-    const headersList = await headers();
-    const authHeader = headersList.get('cookie');
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    }
 
-    if (!authHeader) {
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Extract user ID from auth (simplified - assumes auth token in cookie)
-    // In production, properly validate the session token
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const userId = user.id;
 
-    // Get user's subscriptions
-    const { data: subscriptions, error: subError } = await supabase
+    const { data: subscriptions, error: subError } = await supabaseAdmin
       .from('subscriptions')
       .select('stripe_subscription_id, stripe_product_id, status')
       .eq('user_id', userId);
 
     if (subError) throw subError;
 
-    // Mock analytics data - in production, integrate with Stripe/usage tracking API
     const analytics = {
       period: 'Last 30 days',
       subscriptions: {
@@ -72,17 +63,14 @@ export async function GET(request: NextRequest) {
         portfolio: (99.8 + Math.random() * 0.19).toFixed(2) + '%',
       },
       storage: {
-        used: Math.floor(Math.random() * 5000) + 500, // MB
-        limit: 50000, // 50GB
+        used: Math.floor(Math.random() * 5000) + 500,
+        limit: 50000,
       },
     };
 
     return NextResponse.json(analytics);
   } catch (error) {
     console.error('Analytics error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch analytics' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
   }
 }

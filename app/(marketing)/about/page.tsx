@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'About | asixstud.io',
-  description: 'Learn more about asixstud and the projects we build',
+  title: 'About | asix.live',
+  description: 'Learn more about Asix and the products we build',
 };
 
 export default function About() {
@@ -13,7 +13,7 @@ export default function About() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <div className="mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-6">About asixstud.io</h1>
+          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-6">About asix.live</h1>
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-6">
             A hub for innovative webapps and projects that solve real-world problems.
           </p>

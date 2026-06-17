@@ -34,7 +34,15 @@ export default function SuccessPage() {
 
     const fetchSessionStatus = async () => {
       try {
-        const response = await fetch(`/api/checkout/session-status?session_id=${sessionId}`);
+        const { data: { session: authSession } } = await supabase!.auth.getSession();
+        const token = authSession?.access_token;
+        if (!token) {
+          setSessionStatus({ status: 'error', error: 'Please sign in to view payment status' });
+          return;
+        }
+        const response = await fetch(`/api/checkout/session-status?session_id=${sessionId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const data = await response.json();
         setSessionStatus(data);
       } catch {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Heavy Pocket | asixstud.io',
+  title: 'Heavy Pocket | asix.live',
   description: 'Your CFO replacement - Financial management and insights',
 };
 
