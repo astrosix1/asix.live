@@ -91,8 +91,8 @@ export default function PrivacyPage() {
           </ul>
         </Section>
 
-        <Section title="5. Cookies">
-          <p className="mb-4">We use only essential cookies required for the service to function:</p>
+        <Section title="5. Cookies and Local Storage">
+          <p className="mb-4">We use only essential cookies and browser storage required for the service to function:</p>
           <ul className="list-disc list-inside space-y-2 text-slate-300">
             <li>
               <strong>Authentication cookies</strong> — set by Supabase to maintain your login session.
@@ -101,6 +101,11 @@ export default function PrivacyPage() {
             <li>
               <strong>Checkout cookies</strong> — set by Stripe during the payment flow to secure the
               transaction. These are strictly necessary for completing a purchase.
+            </li>
+            <li>
+              <strong>Cookie consent preference</strong> — stored in your browser&apos;s local storage
+              (key: <code className="text-amber-400 text-xs bg-slate-800 px-1 py-0.5 rounded">asix-cookie-consent</code>)
+              to remember that you have acknowledged this banner. No personal data is stored.
             </li>
           </ul>
           <p className="mt-4">
@@ -129,8 +134,13 @@ export default function PrivacyPage() {
               <strong>Correction</strong> — ask us to correct inaccurate data.
             </li>
             <li>
-              <strong>Deletion (GDPR Art. 17 / CCPA)</strong> — request that we delete your personal data.
-              We will process deletion requests within 30 days.
+              <strong>Deletion (GDPR Art. 17 / CCPA)</strong> — delete your account and all personal data
+              immediately via your{' '}
+              <Link href="/account/delete" className="text-amber-400 hover:text-amber-300 underline">
+                account settings
+              </Link>
+              , or email us to request manual deletion. Billing records are exempt under Art. 17(3)(b)
+              and retained for 7 years for tax compliance.
             </li>
             <li>
               <strong>Portability</strong> — receive your data in a machine-readable format.

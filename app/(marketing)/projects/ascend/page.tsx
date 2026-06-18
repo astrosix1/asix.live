@@ -10,21 +10,12 @@ export const metadata = {
     description: 'Build sustainable habits with an intuitive mobile app. Track, analyze, and transform your behavior.',
     url: 'https://asix.live/projects/ascend',
     siteName: 'asix.live',
-    images: [
-      {
-        url: 'https://asix.live/og-ascend.png',
-        width: 1200,
-        height: 630,
-        alt: 'Ascend - Habit Tracking App',
-      },
-    ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ascend - Replace Addictions with Hobbies',
     description: 'Build sustainable habits with an intuitive mobile app.',
-    images: ['https://asix.live/og-ascend.png'],
   },
 };
 

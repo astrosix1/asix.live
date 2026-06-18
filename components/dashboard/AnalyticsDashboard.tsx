@@ -59,8 +59,12 @@ export function AnalyticsDashboard() {
         setLoading(true);
         const { data: { session } } = await supabase!.auth.getSession();
         const token = session?.access_token;
+        if (!token) {
+          setError('Session expired. Please sign in again.');
+          return;
+        }
         const res = await fetch('/api/dashboard/analytics', {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Failed to fetch analytics');
         const data = await res.json();

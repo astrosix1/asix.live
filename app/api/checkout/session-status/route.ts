@@ -26,6 +26,9 @@ export async function GET(req: NextRequest) {
   if (!sessionId) {
     return NextResponse.json({ error: 'Missing session_id' }, { status: 400 });
   }
+  if (!sessionId.startsWith('cs_live_') && !sessionId.startsWith('cs_test_')) {
+    return NextResponse.json({ error: 'Invalid session_id' }, { status: 400 });
+  }
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId, {

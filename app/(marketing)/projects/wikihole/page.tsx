@@ -10,21 +10,12 @@ export const metadata = {
     description: 'Explore Wikipedia rabbit holes and build lasting knowledge with AI-generated spaced-repetition cards.',
     url: 'https://asix.live/projects/wikihole',
     siteName: 'asix.live',
-    images: [
-      {
-        url: 'https://asix.live/og-wikihole.png',
-        width: 1200,
-        height: 630,
-        alt: 'WikiHole - Knowledge Discovery App',
-      },
-    ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'WikiHole - The Rabbit Hole That Sticks',
     description: 'Explore Wikipedia rabbit holes and build lasting knowledge.',
-    images: ['https://asix.live/og-wikihole.png'],
   },
 };
 

@@ -159,11 +159,11 @@ export function HomePage() {
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">
+                <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">
                   Break the cycle.
                   <br />
                   <span className="text-amber-400">Build a better you.</span>
-                </h1>
+                </h2>
                 <p className="text-xl text-slate-400 leading-relaxed max-w-lg">
                   Ascend replaces destructive habits with meaningful ones — with tracking, community, and momentum that keeps you going.
                 </p>

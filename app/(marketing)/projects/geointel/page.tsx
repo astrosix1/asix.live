@@ -10,21 +10,12 @@ export const metadata = {
     description: 'Real-time geopolitical intelligence and event tracking with AI-powered crisis analysis.',
     url: 'https://asix.live/projects/geointel',
     siteName: 'asix.live',
-    images: [
-      {
-        url: 'https://asix.live/og-geointel.png',
-        width: 1200,
-        height: 630,
-        alt: 'GeoIntel - Geopolitical Intelligence Platform',
-      },
-    ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GeoIntel - Global Crisis Intelligence',
     description: 'Real-time geopolitical intelligence and event tracking.',
-    images: ['https://asix.live/og-geointel.png'],
   },
 };
 

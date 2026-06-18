@@ -419,6 +419,17 @@ export default function DashboardPage() {
                 Sign Out
               </button>
             </div>
+            <div className="flex items-center justify-between px-6 py-4">
+              <div>
+                <p className="text-sm font-medium text-white">Delete account</p>
+                <p className="text-sm text-slate-400 mt-0.5">Permanently remove your account and all data</p>
+              </div>
+              <Link href="/account/delete">
+                <button className="text-xs font-semibold px-3 py-1.5 border border-red-900/60 text-red-400 rounded-lg hover:bg-red-900/20 transition-colors">
+                  Delete
+                </button>
+              </Link>
+            </div>
           </div>
         </section>
 

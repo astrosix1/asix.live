@@ -256,6 +256,294 @@ export const USE_CASES: UseCase[] = [
         'Bad habits don\'t disappear — they get replaced. Ascend pairs what you\'re quitting with what you\'re building, and tracks both — $4.99/month.',
     },
   },
+  {
+    slug: 'stop-doomscrolling',
+    product: 'ascend',
+    badge: 'Ascend · Focus',
+    headline: 'Stop Doomscrolling and Get Your Attention Back',
+    subheadline:
+      'The average person spends over 2 hours a day on negative news feeds. Ascend gives that time somewhere better to go.',
+    problemTitle: 'Doomscrolling is a loop, not a choice.',
+    problemIntro:
+      'Bad news triggers the same threat-detection system that kept your ancestors alive. Your brain is not malfunctioning — it is doing exactly what it was built to do. The problem is that the feed never ends.',
+    painPoints: [
+      {
+        headline: 'You open the app to "stay informed" and lose an hour.',
+        body: 'There is always one more story. The algorithm surfaces outrage because outrage keeps you reading. You close the app more anxious than when you opened it.',
+      },
+      {
+        headline: 'It bleeds into the rest of your day.',
+        body: 'You carry the mood of the feed into meetings, conversations, and sleep. The scroll does not stay in the app — it sits in your head for hours.',
+      },
+      {
+        headline: 'Willpower alone has never fixed it.',
+        body: 'You have told yourself to stop a hundred times. The reflex is faster than the resolve. You need a system, not a reminder.',
+      },
+    ],
+    solutionTitle: 'Replace the loop with a streak worth keeping.',
+    solutionBody:
+      'Ascend works by giving the doomscroll reflex a better target. Every time you feel the pull toward the feed, a habit you have already set up is waiting instead. Over days and weeks, the replacement crowds out the loop.',
+    features: [
+      {
+        icon: '🎯',
+        title: 'Trigger-aware replacements',
+        body: 'Set a replacement habit tied to the moments you usually scroll — morning, lunch, before bed. The trigger stays; the response changes.',
+      },
+      {
+        icon: '🔥',
+        title: 'Daily streak tracking',
+        body: 'Every day you hold the line adds to a number worth protecting. The streak becomes the motivation that willpower never was.',
+      },
+      {
+        icon: '📊',
+        title: 'Time reclaimed counter',
+        body: 'See how many hours you have taken back as the days compound. The number is surprisingly large, and surprisingly motivating.',
+      },
+    ],
+    stepsTitle: 'Three steps to your first scroll-free week',
+    steps: [
+      {
+        number: '01',
+        title: 'Name the trigger moment',
+        body: 'When do you usually open the feed — first thing in bed, waiting for coffee, on the couch at night? Name it and you can plan for it.',
+      },
+      {
+        number: '02',
+        title: 'Set a one-minute replacement',
+        body: 'Pick something tiny for that moment: stretching, a glass of water, three deep breaths. Ascend tracks it. One minute still counts.',
+      },
+      {
+        number: '03',
+        title: 'Watch the streak protect itself',
+        body: 'By day five, breaking the streak feels worse than any news story. That is the system working.',
+      },
+    ],
+    ctaHeadline: 'Your attention is worth more than the feed.',
+    ctaBody: 'Start your first scroll-free streak today.',
+    price: '$4.99/month',
+    checkoutPlan: 'ascend',
+    metadata: {
+      title: 'Stop Doomscrolling For Good | Ascend by asix.live',
+      description:
+        'Doomscrolling averages 2+ hours a day. Ascend replaces the loop with a streak and a habit you actually want — $4.99/month.',
+    },
+  },
+  {
+    slug: 'reduce-screen-time',
+    product: 'ascend',
+    badge: 'Ascend · Focus',
+    headline: 'Reclaim 2 Hours a Day from Your Phone',
+    subheadline:
+      'The average adult spends over 7 hours a day on screens. Ascend helps you take back the hours that actually matter.',
+    problemTitle: 'Screen time is not a moral failure — it is a design problem.',
+    problemIntro:
+      'Every app on your phone was built by teams whose job is to keep you there. Reducing screen time without a replacement plan is walking into that fight unarmed.',
+    painPoints: [
+      {
+        headline: 'You check your phone 96 times a day on average.',
+        body: 'Most of those checks happen without a reason. Boredom, habit, and reflex drive them — not need. Each one costs a small slice of your attention.',
+      },
+      {
+        headline: 'Screen time settings do not actually help.',
+        body: 'You tap "Ignore Limit" every time. The notification is easy to dismiss because there is nothing waiting on the other side of it.',
+      },
+      {
+        headline: 'The hours are gone before you notice them.',
+        body: 'You sit down for five minutes and look up forty minutes later. Screen time does not feel like a choice because by the time you notice, it already happened.',
+      },
+    ],
+    solutionTitle: 'Give your hands something better to hold.',
+    solutionBody:
+      'Ascend tracks what you do instead of scrolling — reading, moving, creating, anything. As the streak for the replacement habit grows, the screen habit shrinks. You are not fighting your phone; you are outgrowing it.',
+    features: [
+      {
+        icon: '⏱️',
+        title: 'Replacement habit timer',
+        body: 'Log the minutes you spend on the alternative. Watch the replacement total grow alongside the days of your streak.',
+      },
+      {
+        icon: '🧱',
+        title: 'Habit stacking',
+        body: 'Attach phone-free habits to existing anchors — after meals, before sleep, first hour of the day. Anchored habits are twice as likely to stick.',
+      },
+      {
+        icon: '📅',
+        title: 'Weekly progress view',
+        body: 'See which days were strongest and weakest. Patterns surface quickly, and patterns you can see are patterns you can change.',
+      },
+    ],
+    stepsTitle: 'How to cut screen time without white-knuckling it',
+    steps: [
+      {
+        number: '01',
+        title: 'Pick one phone-free window',
+        body: 'Not all day — one hour. First thing in the morning or the hour before bed. A single phone-free window changes the whole shape of a day.',
+      },
+      {
+        number: '02',
+        title: 'Fill it with something trackable',
+        body: 'Add a habit to Ascend for that window: a walk, a chapter, a workout, anything. The replacement makes the absence feel like gain, not loss.',
+      },
+      {
+        number: '03',
+        title: 'Expand as the habit holds',
+        body: 'Once one window is stable, add another. Two phone-free hours per day is 730 hours per year — over a month of reclaimed time.',
+      },
+    ],
+    ctaHeadline: 'Two hours a day is 730 hours a year.',
+    ctaBody: 'Start with one phone-free hour and build from there.',
+    price: '$4.99/month',
+    checkoutPlan: 'ascend',
+    metadata: {
+      title: 'Reduce Screen Time That Actually Sticks | Ascend by asix.live',
+      description:
+        'The average adult spends 7+ hours on screens daily. Ascend replaces screen time with habits worth keeping — $4.99/month.',
+    },
+  },
+  {
+    slug: 'beat-procrastination',
+    product: 'ascend',
+    badge: 'Ascend · Productivity',
+    headline: 'Beat Procrastination With Systems, Not Willpower',
+    subheadline:
+      '20% of adults are chronic procrastinators. Ascend replaces the avoidance loop with a daily habit that makes starting automatic.',
+    problemTitle: 'Procrastination is not laziness. It is emotion regulation.',
+    problemIntro:
+      'You avoid the task because it triggers anxiety, boredom, or self-doubt. The avoidance feels like relief — for about twenty seconds. Then the guilt compounds the problem.',
+    painPoints: [
+      {
+        headline: 'You plan the task instead of doing it.',
+        body: 'Reorganizing your to-do list, setting new timers, finding the perfect app — these feel productive but are procrastination wearing a disguise.',
+      },
+      {
+        headline: 'The longer you wait, the harder it gets.',
+        body: 'Avoidance grows the perceived difficulty of the task. Something that takes twenty minutes feels monumental after three days of putting it off.',
+      },
+      {
+        headline: 'Motivation is not the problem.',
+        body: 'Waiting until you feel ready means waiting until the deadline panic arrives. The feeling never comes first — action does.',
+      },
+    ],
+    solutionTitle: 'Make starting a habit, not a decision.',
+    solutionBody:
+      'Ascend builds a daily "start habit" — a two-minute anchor at a consistent time each day where you begin the thing you have been avoiding. The habit is not about finishing; it is about starting. Starting gets easier every time you do it.',
+    features: [
+      {
+        icon: '🚀',
+        title: 'Start habit timer',
+        body: 'Set a daily two-minute start time. When the prompt arrives, you open the work — nothing more. Ascend tracks the streak.',
+      },
+      {
+        icon: '🔥',
+        title: 'Streak-based momentum',
+        body: 'Seven consecutive start days creates more momentum than any motivational content. The streak is the system.',
+      },
+      {
+        icon: '📈',
+        title: 'Completion tracking',
+        body: 'Log what you finished alongside what you started. Watching both numbers grow closes the feedback loop that makes the habit self-reinforcing.',
+      },
+    ],
+    stepsTitle: 'The three-step anti-procrastination protocol',
+    steps: [
+      {
+        number: '01',
+        title: 'Name the one thing you keep avoiding',
+        body: 'Not a category — a specific task or type of work. "Write" is too vague. "Open the draft and write one sentence" is a habit.',
+      },
+      {
+        number: '02',
+        title: 'Set a daily two-minute start time',
+        body: 'Pick a time you can commit to every day. Set it in Ascend. When the prompt fires, you start — just two minutes. You almost always continue.',
+      },
+      {
+        number: '03',
+        title: 'Track starts, not just completions',
+        body: 'Give yourself credit for showing up even when the session is short. Completion follows consistency; consistency follows showing up.',
+      },
+    ],
+    ctaHeadline: 'The task is not the obstacle. The start is.',
+    ctaBody: 'Build the start habit and the rest follows.',
+    price: '$4.99/month',
+    checkoutPlan: 'ascend',
+    metadata: {
+      title: 'Beat Procrastination With Daily Habits | Ascend by asix.live',
+      description:
+        'Procrastination is an emotion problem, not a time problem. Ascend builds the start habit that makes action automatic — $4.99/month.',
+    },
+  },
+  {
+    slug: 'quit-vaping',
+    product: 'ascend',
+    badge: 'Ascend · Habit Replacement',
+    headline: 'Quit Vaping for Good with a Habit That Actually Replaces It',
+    subheadline:
+      'Cold turkey works for 5% of people. Replacement habit therapy has triple the success rate. Ascend is built around that difference.',
+    problemTitle: 'Your body adapted to nicotine. It needs something else now.',
+    problemIntro:
+      'Vaping delivers nicotine faster than cigarettes and disappears anywhere — which is exactly what makes it so hard to stop. The craving is physical, the habit is behavioral, and both need a response.',
+    painPoints: [
+      {
+        headline: 'The craving hits in seconds and fades in minutes.',
+        body: 'If you can get through the first three to five minutes of a craving, it passes. Most people reach for the vape because they have nothing else to do in that window.',
+      },
+      {
+        headline: 'It is invisible, which makes it everywhere.',
+        body: 'Vapes fit in a pocket and produce no smell. There is no social friction left to slow the habit down — which means you have to build the friction yourself.',
+      },
+      {
+        headline: 'Quitting cold turkey creates a vacuum.',
+        body: 'When you remove the behavior without replacing it, stress and boredom hit harder. Most relapses happen in the first two weeks, in exactly those moments.',
+      },
+    ],
+    solutionTitle: 'Outlast the craving with a habit already in place.',
+    solutionBody:
+      'Ascend pairs your quit with a replacement behavior timed to the craving window — something you can do in three to five minutes. As the replacement habit gains a streak, the craving loses its hold. The goal is not white-knuckling it; it is making the replacement automatic.',
+    features: [
+      {
+        icon: '⏱️',
+        title: 'Craving window replacements',
+        body: 'Set a three-minute habit for the moments you most often vape. Ascend tracks every time you choose the replacement over the device.',
+      },
+      {
+        icon: '🔥',
+        title: 'Quit streak with recovery notes',
+        body: 'See your nicotine-free days compound. Add optional notes on cravings, triggers, or wins. The log becomes the evidence that you are changing.',
+      },
+      {
+        icon: '📈',
+        title: 'Recovery timeline',
+        body: 'Track what returns as the days accumulate — taste, sleep, breathing, energy. The physical benefits become the motivation to continue.',
+      },
+    ],
+    stepsTitle: 'Your first two weeks of quitting vaping',
+    steps: [
+      {
+        number: '01',
+        title: 'Name your highest-risk moments',
+        body: 'After meals, during stress, in the car, before sleep. Pick the two or three moments when you vape most automatically.',
+      },
+      {
+        number: '02',
+        title: 'Set a replacement for each trigger',
+        body: 'Cold water, a short walk, controlled breathing, chewing gum. The replacement does not need to be powerful — it needs to outlast the craving window.',
+      },
+      {
+        number: '03',
+        title: 'Track the streak daily',
+        body: 'Check in with Ascend every evening. A seven-day streak changes the biology; a thirty-day streak changes the identity. Both start on day one.',
+      },
+    ],
+    ctaHeadline: 'The craving lasts three minutes. The streak lasts a lifetime.',
+    ctaBody: 'Start your quit streak today with a replacement that actually works.',
+    price: '$4.99/month',
+    checkoutPlan: 'ascend',
+    metadata: {
+      title: 'Quit Vaping For Good | Ascend by asix.live',
+      description:
+        'Cold turkey has a 5% success rate. Ascend uses replacement habit therapy to make quitting vaping stick — $4.99/month.',
+    },
+  },
 ];
 
 export function getUseCase(slug: string): UseCase | undefined {
