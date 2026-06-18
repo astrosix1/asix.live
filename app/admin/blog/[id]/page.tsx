@@ -1,40 +1,24 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { getPostById } from '@/lib/blog';
 import type { BlogPost } from '@/types/blog';
 import BlogForm from '@/components/blog/BlogForm';
 
-export default function EditBlogPostPage({
+export default async function EditBlogPostPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { id } = await params;
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getPostById(params.id);
-        setPost(data);
-      } catch (err) {
-        console.error('Failed to load post', err);
-      } finally {
-        setLoading(false);
-      }
-    }
+  let post: BlogPost | null = null;
+  let error: string | null = null;
 
-    load();
-  }, [params.id]);
+  try {
+    post = await getPostById(id);
+  } catch (err) {
+    error = err instanceof Error ? err.message : 'Failed to load post';
+  }
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  if (!post)
+  if (error || !post)
     return (
       <div className="text-center py-12 text-gray-600">Post not found</div>
     );
