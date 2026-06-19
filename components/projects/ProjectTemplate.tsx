@@ -23,7 +23,7 @@ interface ProjectTemplateProps {
 
 // Price and checkout-plan per product
 const CHECKOUT_INFO = {
-  ascend:   { plan: 'ascend',   priceLabel: '$4.99/month', priceNote: '' },
+  ascend:   { plan: 'ascend',   priceLabel: '7 days free', priceNote: 'Then $4.99/month. Cancel anytime.' },
   geointel: { plan: 'geointel', priceLabel: '$19/month',   priceNote: '' },
   wikihole: { plan: 'basic',    priceLabel: '$4.99/month', priceNote: 'Included in the Essentials plan' },
 } as const;
@@ -332,7 +332,7 @@ export function ProjectTemplate({
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Ready to get started?</h2>
           <p className="text-xl text-slate-400 mb-10">
             {projectSlug === 'ascend'
-              ? 'Start your journey to replace addictions with hobbies today.'
+              ? 'Try Ascend free for 7 days. No card required until your trial ends.'
               : projectSlug === 'geointel'
               ? 'Unlock geopolitical intelligence and stay ahead of global events.'
               : 'Start exploring rabbit holes — included free in the Essentials plan.'}
@@ -354,10 +354,10 @@ export function ProjectTemplate({
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!isLoggedIn ? (
-              /* Logged-out visitor: Subscribe Now */
+              /* Logged-out visitor: Subscribe Now / Start Free Trial */
               <Link href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}>
                 <button className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}>
-                  Subscribe Now
+                  {projectSlug === 'ascend' ? 'Start Free Trial' : 'Subscribe Now'}
                   <ArrowRight size={20} />
                 </button>
               </Link>
@@ -373,7 +373,7 @@ export function ProjectTemplate({
             </Link>
           </div>
 
-          {!isLoggedIn && (
+          {!isLoggedIn && projectSlug !== 'ascend' && (
             <p className="text-sm text-slate-500 mt-6">Cancel anytime. No hidden fees.</p>
           )}
         </div>

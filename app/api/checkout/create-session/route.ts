@@ -60,6 +60,8 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(`Creating Stripe session with ${lineItems.length} items...`);
+    const isAscend = items.some((item: { appSlug: string }) => item.appSlug === 'ascend');
+
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -70,6 +72,7 @@ export async function POST(req: NextRequest) {
       metadata: {
         userId: userId,
       },
+      ...(isAscend ? { subscription_data: { trial_period_days: 7 } } : {}),
     });
 
     console.log(`Session created: ${session.id}`);
