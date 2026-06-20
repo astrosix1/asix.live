@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://asix.live/terms' },
 };
 
-const EFFECTIVE_DATE = 'June 17, 2026';
+const EFFECTIVE_DATE = 'June 20, 2026';
 const CONTACT_EMAIL = 'legal@asix.live';
 
 export default function TermsPage() {
@@ -61,7 +61,36 @@ export default function TermsPage() {
           </ul>
         </Section>
 
-        <Section title="4. Refund Policy">
+        <Section title="4. Free Trials">
+          <ul className="list-disc list-inside space-y-2 text-slate-300">
+            <li>
+              Selected products (currently Ascend and WikiHole) offer a 7-day free trial for new
+              subscribers. No charge is made during the trial period.
+            </li>
+            <li>
+              At the end of the trial, your subscription automatically converts to a paid plan at the
+              standard monthly rate unless you cancel before the trial ends.
+            </li>
+            <li>
+              To avoid being charged, cancel before your trial period expires. You can cancel at any
+              time from your{' '}
+              <Link href="/dashboard" className="text-amber-400 hover:text-amber-300 underline">
+                dashboard
+              </Link>{' '}
+              or by{' '}
+              <Link href="/contact" className="text-amber-400 hover:text-amber-300 underline">
+                contacting us
+              </Link>
+              .
+            </li>
+            <li>
+              Free trials are available once per product per customer. We reserve the right to limit
+              or revoke trial eligibility at our discretion.
+            </li>
+          </ul>
+        </Section>
+
+        <Section title="5. Refund Policy">
           <p>
             You may request a refund within 7 days of your initial subscription or renewal payment if
             you are unsatisfied with the service. Refund requests after 7 days are at our sole discretion.
@@ -73,7 +102,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="5. Acceptable Use">
+        <Section title="6. Acceptable Use">
           <p className="mb-4">You agree not to:</p>
           <ul className="list-disc list-inside space-y-2 text-slate-300">
             <li>Use the services for any unlawful purpose</li>
@@ -84,7 +113,7 @@ export default function TermsPage() {
           </ul>
         </Section>
 
-        <Section title="6. Intellectual Property">
+        <Section title="7. Intellectual Property">
           <p>
             All content, software, and materials on asix.live — including product designs, text, graphics,
             and code — are owned by or licensed to Asix. These Terms do not grant you any rights to our
@@ -92,7 +121,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="7. User Content">
+        <Section title="8. User Content">
           <p>
             For products that allow you to create content (such as habit entries in Ascend), you retain
             ownership of your content. You grant us a limited licence to store and display your content
@@ -100,7 +129,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="8. Disclaimers">
+        <Section title="9. Disclaimers">
           <p className="mb-4">
             The services are provided &quot;as is&quot; and &quot;as available&quot; without warranties of any kind,
             express or implied, including warranties of merchantability, fitness for a particular purpose,
@@ -113,7 +142,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="9. Limitation of Liability">
+        <Section title="10. Limitation of Liability">
           <p>
             To the maximum extent permitted by law, Asix shall not be liable for any indirect, incidental,
             special, consequential, or punitive damages, including loss of profits, data, or goodwill,
@@ -123,7 +152,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="10. Termination">
+        <Section title="11. Termination">
           <p>
             We may suspend or terminate your account if you violate these Terms. You may close your
             account at any time by contacting us. On termination, your right to use the services ends
@@ -135,7 +164,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="11. Changes to These Terms">
+        <Section title="12. Changes to These Terms">
           <p>
             We may update these Terms from time to time. We will notify you of material changes by email
             at least 14 days before they take effect. Continued use of the services after changes take
@@ -143,14 +172,14 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="12. Governing Law">
+        <Section title="13. Governing Law">
           <p>
             These Terms are governed by the laws of the United States. Any disputes shall be resolved
             in the courts of the jurisdiction in which Asix operates.
           </p>
         </Section>
 
-        <Section title="13. Contact">
+        <Section title="14. Contact">
           <p>
             For questions about these Terms, contact us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-amber-400 hover:text-amber-300 underline">

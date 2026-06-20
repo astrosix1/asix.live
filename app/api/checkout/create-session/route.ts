@@ -60,7 +60,11 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(`Creating Stripe session with ${lineItems.length} items...`);
-    const isAscend = items.some((item: { appSlug: string }) => item.appSlug === 'ascend');
+    // Trial applies only when every item in the cart is a trial-eligible product.
+    // Mixing a trial product (ascend, basic) with a non-trial product (geointel)
+    // would give a free trial on the non-trial product — block that case.
+    const TRIAL_SLUGS = new Set(['ascend', 'basic']);
+    const hasTrial = items.every((item: { appSlug: string }) => TRIAL_SLUGS.has(item.appSlug));
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -72,7 +76,7 @@ export async function POST(req: NextRequest) {
       metadata: {
         userId: userId,
       },
-      ...(isAscend ? { subscription_data: { trial_period_days: 7 } } : {}),
+      ...(hasTrial ? { subscription_data: { trial_period_days: 7 } } : {}),
     });
 
     console.log(`Session created: ${session.id}`);
