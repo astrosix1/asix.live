@@ -112,12 +112,12 @@ export async function POST(req: NextRequest) {
         // 3DS/SCA authentication required — Stripe sends the customer a payment link automatically.
         // Subscription remains in its current state; we take no DB action here.
         const invoice = event.data.object as Stripe.Invoice;
-        console.log('Payment action required for invoice:', invoice.id, 'customer:', invoice.customer);
+        console.info('Payment action required for invoice:', invoice.id, 'customer:', invoice.customer);
         break;
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.info(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
