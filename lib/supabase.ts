@@ -1,17 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Use the standard supabase-js client with localStorage for session persistence.
-// localStorage works reliably on asix.live for same-domain auth.
+// createBrowserClient stores the session in cookies so server components
+// (AdminLayout, etc.) can read it via getSupabaseServer().
 export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        storageKey: 'asix-auth-token',
-      },
-    })
+  ? createBrowserClient(supabaseUrl, supabaseAnonKey)
   : null;
