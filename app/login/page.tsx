@@ -34,24 +34,15 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      if (!supabase) throw new Error('Supabase not configured');
 
-      const data = await response.json();
+      // Sign in directly via the browser client so it stores the session
+      // in cookies using the format that createServerClient can read server-side.
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (!response.ok) {
-        setError(data.error || 'Login failed');
+      if (error) {
+        setError(error.message);
         return;
-      }
-
-      if (supabase && data.access_token && data.refresh_token) {
-        await supabase.auth.setSession({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token,
-        });
       }
 
       router.push(redirectUri);
