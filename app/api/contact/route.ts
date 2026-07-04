@@ -14,11 +14,6 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     const validatedData = contactFormSchema.parse(data);
 
-    console.log('Contact form submission:', {
-      timestamp: new Date().toISOString(),
-      ...validatedData,
-    });
-
     if (resend) {
       // Send notification to admin
       await resend.emails.send({
