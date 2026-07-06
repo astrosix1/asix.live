@@ -14,10 +14,26 @@ export async function generateMetadata({
   const { slug } = await params;
   try {
     const post = await getPostBySlugServer(slug);
+    const url = `https://asix.live/blog/${post.slug}`;
     return {
       title: `${post.title} | asix.live`,
       description: post.description,
+      alternates: {
+        canonical: url,
+      },
       openGraph: {
+        title: post.title,
+        description: post.description,
+        url,
+        type: 'article',
+        publishedTime: post.created_at,
+        modifiedTime: post.updated_at,
+        authors: [post.author],
+        tags: post.tags,
+        images: post.cover_image ? [post.cover_image] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
         title: post.title,
         description: post.description,
         images: post.cover_image ? [post.cover_image] : [],
