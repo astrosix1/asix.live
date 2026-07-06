@@ -22,7 +22,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { access_token, refresh_token } = await request.json();
+  let access_token: string | undefined;
+  let refresh_token: string | undefined;
+  try {
+    const body = await request.json();
+    access_token = body.access_token;
+    refresh_token = body.refresh_token;
+  } catch {
+    return NextResponse.json(
+      { error: 'Invalid JSON body' },
+      { status: 400 }
+    );
+  }
 
   if (!access_token || !refresh_token) {
     return NextResponse.json(

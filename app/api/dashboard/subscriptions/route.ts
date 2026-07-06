@@ -39,20 +39,20 @@ export async function GET(request: NextRequest) {
     // Look up project slugs/names from the projects table (best-effort).
     // If the projects table doesn't exist or the query fails we fall back to
     // local project-config which has all current project metadata.
-    const projectIds = [...new Set((subscriptions ?? []).map((s: any) => s.project_id).filter(Boolean))];
+    const projectIds = [...new Set((subscriptions ?? []).map((s) => s.project_id).filter(Boolean))];
     const projectsMap: Record<string, { slug: string; name: string }> = {};
     if (projectIds.length > 0) {
       const { data: dbProjects } = await supabase
         .from('projects')
         .select('id, slug, name')
         .in('id', projectIds);
-      (dbProjects ?? []).forEach((p: any) => {
+      (dbProjects ?? []).forEach((p) => {
         projectsMap[p.id] = { slug: p.slug, name: p.name };
       });
     }
 
     // Enhance subscriptions with project details from local config
-    const enrichedSubscriptions = (subscriptions ?? []).map((sub: any) => {
+    const enrichedSubscriptions = (subscriptions ?? []).map((sub) => {
       const dbProject = projectsMap[sub.project_id];
       // Prefer DB-derived slug; fall back to any slug stored directly on the row
       const slug = dbProject?.slug ?? sub.project_slug ?? sub.slug ?? '';

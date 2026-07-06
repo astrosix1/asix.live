@@ -74,6 +74,8 @@ export function Navbar({ onLoginClick }: NavbarProps) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
             className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

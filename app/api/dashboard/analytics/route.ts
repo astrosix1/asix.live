@@ -31,8 +31,8 @@ export async function GET(request: NextRequest) {
       period: 'Last 30 days',
       subscriptions: {
         total: subscriptions?.length || 0,
-        active: subscriptions?.filter((s: any) => s.status === 'active').length || 0,
-        canceled: subscriptions?.filter((s: any) => s.status === 'canceled').length || 0,
+        active: subscriptions?.filter((s) => s.status === 'active').length || 0,
+        canceled: subscriptions?.filter((s) => s.status === 'canceled').length || 0,
       },
       usage: {
         ascend: {
