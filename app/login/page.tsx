@@ -45,7 +45,14 @@ export default function LoginPage() {
         return;
       }
 
-      router.push(redirectUri);
+      // Hard redirect (not router.push) — AuthProvider's context update from
+      // signInWithPassword's SIGNED_IN notification hasn't necessarily
+      // rendered yet by this point, so a client-side navigation can land on
+      // the destination page while it still reads a stale user: null and
+      // bounces back to /login. A full reload forces AuthProvider to remount
+      // and call getSession() fresh, which reads the just-persisted session.
+      window.location.href = redirectUri;
+      return;
     } catch {
       setError('An error occurred. Please try again.');
     } finally {
