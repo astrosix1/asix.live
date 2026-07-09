@@ -187,7 +187,7 @@ export default function DashboardPage() {
           <div className="bg-[#1E293B] border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-white font-semibold text-lg">Cancel Subscription?</h3>
-              <button onClick={() => setCancelConfirm(null)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+              <button onClick={() => setCancelConfirm(null)} aria-label="Close" className="text-slate-400 hover:text-white"><X size={20} /></button>
             </div>
             <p className="text-slate-300 text-sm mb-2">
               You&apos;re about to cancel <strong className="text-white">{cancelConfirm.projectName}</strong>.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { getPublishedPosts } from '@/lib/blog';
 import type { BlogListItem } from '@/types/blog';
@@ -20,19 +20,21 @@ const stagger = {
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
   useEffect(() => {
     getPublishedPosts()
       .then(setPosts)
-      .catch(() => {})
+      .catch(() => setLoadError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  const allTags = [...new Set(posts.flatMap((p) => p.tags))];
-  const filtered = activeTag
-    ? posts.filter((p) => p.tags.includes(activeTag))
-    : posts;
+  const allTags = useMemo(() => [...new Set(posts.flatMap((p) => p.tags))], [posts]);
+  const filtered = useMemo(
+    () => activeTag ? posts.filter((p) => p.tags.includes(activeTag)) : posts,
+    [posts, activeTag],
+  );
 
   return (
     <div className="bg-[#0F172A] min-h-screen">
@@ -83,6 +85,10 @@ export default function BlogPage() {
           <div className="flex justify-center py-16">
             <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
           </div>
+        ) : loadError ? (
+          <p className="text-slate-500 text-center py-16 text-lg">
+            Could not load posts. Please try refreshing the page.
+          </p>
         ) : filtered.length === 0 ? (
           <p className="text-slate-500 text-center py-16 text-lg">
             {activeTag ? `No posts tagged "${activeTag}".` : 'No posts yet.'}

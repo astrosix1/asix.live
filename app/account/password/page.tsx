@@ -7,6 +7,48 @@ import { ArrowLeft, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
 import { updateUserPassword } from '@/lib/auth';
 
+function PasswordInput({
+  label,
+  value,
+  onChange,
+  show,
+  onToggle,
+  placeholder,
+  disabled,
+}: {
+  label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  show: boolean;
+  onToggle: () => void;
+  placeholder: string;
+  disabled: boolean;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-white mb-2">{label}</label>
+      <div className="relative">
+        <input
+          type={show ? 'text' : 'password'}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 pr-10"
+        />
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={show ? 'Hide password' : 'Show password'}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+        >
+          {show ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ChangePasswordPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -84,43 +126,6 @@ export default function ChangePasswordPage() {
     }
   };
 
-  const PasswordInput = ({
-    label,
-    value,
-    onChange,
-    show,
-    onToggle,
-    placeholder,
-  }: {
-    label: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    show: boolean;
-    onToggle: () => void;
-    placeholder: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-medium text-white mb-2">{label}</label>
-      <div className="relative">
-        <input
-          type={show ? 'text' : 'password'}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          disabled={isSubmitting}
-          className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 pr-10"
-        />
-        <button
-          type="button"
-          onClick={onToggle}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
-        >
-          {show ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-[#0F172A]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -144,6 +149,7 @@ export default function ChangePasswordPage() {
               show={showCurrentPassword}
               onToggle={() => setShowCurrentPassword(!showCurrentPassword)}
               placeholder="Enter your current password"
+              disabled={isSubmitting}
             />
 
             <div className="h-px bg-slate-700" />
@@ -155,6 +161,7 @@ export default function ChangePasswordPage() {
               show={showNewPassword}
               onToggle={() => setShowNewPassword(!showNewPassword)}
               placeholder="Enter your new password"
+              disabled={isSubmitting}
             />
 
             <PasswordInput
@@ -164,6 +171,7 @@ export default function ChangePasswordPage() {
               show={showConfirmPassword}
               onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
               placeholder="Confirm your new password"
+              disabled={isSubmitting}
             />
 
             {/* Password Strength Indicator */}

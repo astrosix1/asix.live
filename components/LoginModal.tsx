@@ -102,6 +102,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </h2>
             <button
               onClick={onClose}
+              aria-label="Close"
               className="text-slate-500 hover:text-slate-700 transition-colors"
             >
               ✕
