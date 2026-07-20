@@ -159,6 +159,7 @@ export default function CheckoutPage() {
                     type="checkbox"
                     checked={isInCart(app.slug)}
                     onChange={() => {}} // Controlled by parent onClick
+                    aria-label={`${isInCart(app.slug) ? 'Remove' : 'Add'} ${app.name} ${isInCart(app.slug) ? 'from' : 'to'} cart`}
                     className="w-5 h-5 rounded border-slate-300"
                   />
                   <span className="ml-2 text-sm font-medium text-slate-700">

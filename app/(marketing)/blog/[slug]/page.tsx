@@ -80,8 +80,27 @@ export default async function BlogPostPage({
     year: 'numeric',
   });
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.created_at,
+    dateModified: post.updated_at,
+    author: { '@type': 'Person', name: post.author },
+    image: post.cover_image ? [post.cover_image] : undefined,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://asix.live/blog/${post.slug}`,
+    },
+  };
+
   return (
     <div className="bg-[#0F172A] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <BlogHero
         title={post.title}
         description={post.description}

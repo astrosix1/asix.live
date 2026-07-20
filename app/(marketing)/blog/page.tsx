@@ -26,7 +26,10 @@ export default function BlogPage() {
   useEffect(() => {
     getPublishedPosts()
       .then(setPosts)
-      .catch(() => setLoadError(true))
+      .catch((err) => {
+        console.error('Failed to load blog posts:', err);
+        setLoadError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
