@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { getAllPosts, deletePost } from '@/lib/blog';
 import type { BlogListItem } from '@/types/blog';
@@ -8,6 +8,7 @@ import type { BlogListItem } from '@/types/blog';
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -23,6 +24,16 @@ export default function AdminBlogPage() {
 
     load();
   }, []);
+
+  const filteredPosts = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return posts;
+    return posts.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.tags.some((tag) => tag.toLowerCase().includes(q))
+    );
+  }, [posts, search]);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
@@ -73,6 +84,18 @@ export default function AdminBlogPage() {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-x-auto">
+          <div className="p-4 border-b border-gray-200">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by title or tag..."
+              className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          {filteredPosts.length === 0 ? (
+            <p className="text-center py-12 text-gray-600">No posts match &quot;{search}&quot;</p>
+          ) : (
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -94,7 +117,7 @@ export default function AdminBlogPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {posts.map((post) => (
+              {filteredPosts.map((post) => (
                 <tr key={post.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div>{post.title}</div>
@@ -156,6 +179,7 @@ export default function AdminBlogPage() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
       )}
     </div>

@@ -38,15 +38,15 @@ export async function DELETE(req: NextRequest) {
       .not('stripe_subscription_id', 'is', null);
 
     if (subscriptions) {
-      for (const sub of subscriptions) {
-        if (sub.stripe_subscription_id && sub.status !== 'canceled') {
-          try {
-            await stripe.subscriptions.cancel(sub.stripe_subscription_id);
-          } catch (err) {
-            console.error(`Stripe cancel error for ${sub.stripe_subscription_id}:`, err);
-          }
-        }
-      }
+      await Promise.all(
+        subscriptions
+          .filter((sub) => sub.stripe_subscription_id && sub.status !== 'canceled')
+          .map((sub) =>
+            stripe.subscriptions.cancel(sub.stripe_subscription_id!).catch((err) => {
+              console.error(`Stripe cancel error for ${sub.stripe_subscription_id}:`, err);
+            })
+          )
+      );
     }
 
     // Send confirmation email before deleting (once auth user is deleted, email is gone)

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getProjectBySlugServer } from '@/lib/projects-server';
 import Link from 'next/link';
 
@@ -7,6 +8,39 @@ const PLAN_INFO: Record<string, { checkoutPlan: string; priceLabel: string; pric
   geointel: { checkoutPlan: 'geointel', priceLabel: '$19/month' },
   wikihole: { checkoutPlan: 'basic',    priceLabel: '7 days free', priceNote: 'Then $4.99/month. Cancel anytime.' },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const project = await getProjectBySlugServer(id);
+    const url = `https://asix.live/projects/${project.slug}`;
+    return {
+      title: `${project.name} | asix.live`,
+      description: project.description,
+      alternates: { canonical: url },
+      openGraph: {
+        title: project.name,
+        description: project.description,
+        url,
+        siteName: 'asix.live',
+        type: 'website',
+        images: project.icon_url ? [project.icon_url] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: project.name,
+        description: project.description,
+        images: project.icon_url ? [project.icon_url] : [],
+      },
+    };
+  } catch {
+    return { title: 'Project Not Found | asix.live' };
+  }
+}
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
