@@ -73,7 +73,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription?.unsubscribe();
+    // Safety net for a poisoned refresh token (e.g. "Invalid Refresh Token:
+    // Already Used" from a cross-tab refresh race — one tab rotates the
+    // token, another tab's already-in-flight refresh then fails). That
+    // failure happens inside the SDK's own auto-refresh timer, outside any
+    // promise chain our code owns, so it surfaces as an unhandled
+    // rejection instead of reaching the onAuthStateChange/getSession
+    // handling above. Left alone, the UI can be stuck showing a stale
+    // logged-in state while the SDK silently retries with the same dead
+    // token. Force a local sign-out the moment we see one, and rate-limit
+    // to one reaction per 3s so a burst of these (seen in production)
+    // doesn't fire the reset repeatedly.
+    let recentlyHandledPoisonedToken = false;
+    function isPoisonedRefreshTokenError(reason: unknown) {
+      const name = (reason as { name?: unknown } | null | undefined)?.name;
+      const message = (reason as { message?: unknown } | null | undefined)?.message;
+      return (
+        typeof name === 'string' &&
+        name.startsWith('Auth') &&
+        typeof message === 'string' &&
+        /refresh token/i.test(message)
+      );
+    }
+    function handlePoisonedRefreshToken(event: PromiseRejectionEvent) {
+      if (recentlyHandledPoisonedToken || !isPoisonedRefreshTokenError(event.reason)) return;
+      recentlyHandledPoisonedToken = true;
+      setTimeout(() => {
+        recentlyHandledPoisonedToken = false;
+      }, 3000);
+      event.preventDefault();
+      console.error('Poisoned refresh token detected, forcing local sign-out:', event.reason);
+      setSession(null);
+      setUser(null);
+      setLoading(false);
+      client.auth.signOut({ scope: 'local' }).catch(() => {});
+    }
+    window.addEventListener('unhandledrejection', handlePoisonedRefreshToken);
+
+    return () => {
+      subscription?.unsubscribe();
+      window.removeEventListener('unhandledrejection', handlePoisonedRefreshToken);
+    };
   }, []);
 
   return (
