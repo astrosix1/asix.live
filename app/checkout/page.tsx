@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { APP_PRICES, formatPrice } from '@/lib/stripe-prices';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface CartItem {
   appSlug: string;
@@ -15,8 +14,6 @@ interface CartItem {
 
 export default function CheckoutPage() {
   const { user, loading } = useAuth();
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [processing, setProcessing] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -26,6 +23,19 @@ export default function CheckoutPage() {
     { slug: 'geointel', name: 'GeoIntel', description: 'Geopolitical intelligence platform' },
   ];
 
+  // Pre-select the product named in ?plan= query param (e.g. from the pricing page).
+  // Computed directly in the initializer instead of an effect, since it only
+  // needs to run once from the URL present on the initial render.
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const plan = searchParams.get('plan');
+    if (!plan) return [];
+    const app = apps.find((a) => a.slug === plan);
+    if (!app) return [];
+    const price = APP_PRICES[plan]?.pro || 0;
+    return [{ appSlug: plan, appName: app.name, plan: 'pro', price }];
+  });
+  const [processing, setProcessing] = useState(false);
+
   // Redirect unauthenticated visitors to login, then back here with plan preserved
   useEffect(() => {
     if (!loading && !user) {
@@ -34,18 +44,6 @@ export default function CheckoutPage() {
       router.replace(`/login?redirect=${encodeURIComponent(returnTo)}`);
     }
   }, [loading, user]);
-
-  // Pre-select the product named in ?plan= query param (e.g. from the pricing page)
-  useEffect(() => {
-    const plan = searchParams.get('plan');
-    if (!plan) return;
-    const app = apps.find((a) => a.slug === plan);
-    if (app && !cart.some((item) => item.appSlug === plan)) {
-      const price = APP_PRICES[plan]?.pro || 0;
-      setCart([{ appSlug: plan, appName: app.name, plan: 'pro', price }]);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
 
   const addToCart = (appSlug: string, appName: string) => {
     const price = APP_PRICES[appSlug]?.pro || 0;
@@ -204,7 +202,7 @@ export default function CheckoutPage() {
                   </button>
 
                   <p className="text-xs text-slate-600 text-center mt-4">
-                    You'll be redirected to Stripe to complete payment
+                    You&apos;ll be redirected to Stripe to complete payment
                   </p>
                 </>
               )}

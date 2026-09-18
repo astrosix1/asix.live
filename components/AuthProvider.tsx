@@ -23,6 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!supabase) {
+      // Supabase client isn't configured; bail out of the one-time auth
+      // subscription setup below and stop showing the loading state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }

@@ -40,7 +40,7 @@ export default function AdminBlogPage() {
       try {
         await deletePost(id);
         setPosts(posts.filter((p) => p.id !== id));
-      } catch (err) {
+      } catch {
         alert('Failed to delete post');
       }
     }

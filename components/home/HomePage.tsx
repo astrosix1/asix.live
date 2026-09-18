@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, easeInOut } from 'framer-motion';
-import {
-  CheckCircle, Globe, ArrowRight, Shield, TrendingUp,
-} from 'lucide-react';
+import { CheckCircle, ArrowRight } from 'lucide-react';
 import { getFeaturedPosts } from '@/lib/blog';
 import type { BlogListItem } from '@/types/blog';
 import BlogCard from '@/components/blog/BlogCard';

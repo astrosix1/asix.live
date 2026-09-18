@@ -410,7 +410,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between px-6 py-4">
               <div>
                 <p className="text-sm font-medium text-white">Sign out of your account</p>
-                <p className="text-sm text-slate-400 mt-0.5">You'll need to sign in again to access your apps</p>
+                <p className="text-sm text-slate-400 mt-0.5">You&apos;ll need to sign in again to access your apps</p>
               </div>
               <button
                 onClick={handleSignOut}

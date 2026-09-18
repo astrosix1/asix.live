@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
@@ -16,7 +16,6 @@ type ActivationState = 'idle' | 'activating' | 'done' | 'failed';
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { user } = useAuth();
   const sessionId = searchParams.get('session_id');
 
@@ -28,6 +27,8 @@ export default function SuccessPage() {
 
   useEffect(() => {
     if (!sessionId) {
+      // No session to fetch status for; bail out of the async fetch below.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }

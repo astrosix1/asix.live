@@ -27,7 +27,7 @@ export default function WikiHoleProject() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">Project not found</h1>
-          <p className="text-slate-600">The project you're looking for doesn't exist.</p>
+          <p className="text-slate-600">The project you&apos;re looking for doesn&apos;t exist.</p>
         </div>
       </div>
     );

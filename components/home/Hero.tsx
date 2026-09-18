@@ -15,7 +15,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-xl sm:text-2xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          A hub for innovative webapps and projects that push the boundaries of what's possible.
+          A hub for innovative webapps and projects that push the boundaries of what&apos;s possible.
         </p>
 
         <p className="text-lg text-slate-500 dark:text-slate-500 max-w-2xl mx-auto">
