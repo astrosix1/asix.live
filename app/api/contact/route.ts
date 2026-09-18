@@ -1,6 +1,8 @@
 import { contactFormSchema } from '@/lib/validation';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { escapeHtml } from '@/lib/utils';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -11,8 +13,24 @@ const FROM_EMAIL  = process.env.FROM_EMAIL  || 'noreply@asix.live';
 
 export async function POST(request: NextRequest) {
   try {
+    if (!checkRateLimit(`contact:${getClientIp(request)}`, 5, 10 * 60_000)) {
+      return NextResponse.json(
+        { success: false, message: 'Too many messages sent. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const data = await request.json();
     const validatedData = contactFormSchema.parse(data);
+
+    // HTML-escape every field before it goes into an HTML email template —
+    // the raw values are attacker-controlled (this is a public form).
+    const safe = {
+      name: escapeHtml(validatedData.name),
+      email: escapeHtml(validatedData.email),
+      subject: escapeHtml(validatedData.subject || ''),
+      message: escapeHtml(validatedData.message),
+    };
 
     if (resend) {
       // Send notification to admin
@@ -27,21 +45,21 @@ export async function POST(request: NextRequest) {
 
             <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
               <tr><td style="padding:8px 0;color:#64748b;width:100px;font-size:13px">Name</td>
-                  <td style="padding:8px 0;color:#1e293b;font-size:14px"><strong>${validatedData.name}</strong></td></tr>
+                  <td style="padding:8px 0;color:#1e293b;font-size:14px"><strong>${safe.name}</strong></td></tr>
               <tr><td style="padding:8px 0;color:#64748b;font-size:13px">Email</td>
-                  <td style="padding:8px 0;color:#1e293b;font-size:14px"><a href="mailto:${validatedData.email}">${validatedData.email}</a></td></tr>
-              ${validatedData.subject ? `<tr><td style="padding:8px 0;color:#64748b;font-size:13px">Subject</td>
-                  <td style="padding:8px 0;color:#1e293b;font-size:14px">${validatedData.subject}</td></tr>` : ''}
+                  <td style="padding:8px 0;color:#1e293b;font-size:14px"><a href="mailto:${safe.email}">${safe.email}</a></td></tr>
+              ${safe.subject ? `<tr><td style="padding:8px 0;color:#64748b;font-size:13px">Subject</td>
+                  <td style="padding:8px 0;color:#1e293b;font-size:14px">${safe.subject}</td></tr>` : ''}
             </table>
 
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:24px">
               <p style="color:#64748b;font-size:12px;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.05em">Message</p>
-              <p style="color:#1e293b;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${validatedData.message}</p>
+              <p style="color:#1e293b;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${safe.message}</p>
             </div>
 
-            <a href="mailto:${validatedData.email}?subject=Re: ${validatedData.subject || 'Your message to Asix.live'}"
+            <a href="mailto:${safe.email}?subject=${encodeURIComponent(`Re: ${validatedData.subject || 'Your message to Asix.live'}`)}"
                style="display:inline-block;background:#3b82f6;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:500">
-              Reply to ${validatedData.name}
+              Reply to ${safe.name}
             </a>
           </div>
         `,
@@ -54,13 +72,13 @@ export async function POST(request: NextRequest) {
         subject: "We got your message — Asix.live",
         html: `
           <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-            <h2 style="color:#1e293b">Hey ${validatedData.name} 👋</h2>
+            <h2 style="color:#1e293b">Hey ${safe.name} 👋</h2>
             <p style="color:#475569;line-height:1.6">
               Thanks for reaching out! We've received your message and will get back to you within 1–2 business days.
             </p>
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:20px 0">
               <p style="color:#94a3b8;font-size:12px;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em">Your message</p>
-              <p style="color:#475569;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${validatedData.message}</p>
+              <p style="color:#475569;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${safe.message}</p>
             </div>
             <p style="color:#94a3b8;font-size:13px;margin-top:24px">— The Asix.live Team</p>
           </div>
