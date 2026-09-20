@@ -43,11 +43,12 @@ export function SubscriptionManager({
     return (
       <div className="bg-[#1E293B] rounded-xl border border-slate-700/60 p-10 text-center">
         <p className="text-slate-400 mb-6">You don't have any subscriptions yet.</p>
-        <Link href="/projects">
-          <button className="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:bg-slate-800 transition-colors">
-            Browse Products
-            <ArrowRight size={16} />
-          </button>
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:bg-slate-800 transition-colors"
+        >
+          Browse Products
+          <ArrowRight size={16} />
         </Link>
       </div>
     );
@@ -64,7 +65,7 @@ export function SubscriptionManager({
                 <StatusIcon status={sub.status} />
                 <div className="min-w-0">
                   <p className="font-semibold text-white truncate">{sub.projectName}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">
+                  <p className="text-sm text-slate-400 mt-0.5">
                     {sub.price !== undefined && sub.price > 0
                       ? `$${(sub.price / 100).toFixed(2)}/mo · `
                       : ''}
@@ -77,10 +78,11 @@ export function SubscriptionManager({
                 <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${cls}`}>
                   {text}
                 </span>
-                <Link href={`/checkout?app=${sub.projectSlug}`}>
-                  <button className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors">
-                    Change Plan
-                  </button>
+                <Link
+                  href={`/checkout?app=${sub.projectSlug}`}
+                  className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors"
+                >
+                  Change Plan
                 </Link>
                 <button
                   className="text-xs font-semibold px-3 py-1.5 border border-red-900/60 text-red-400 rounded-lg hover:bg-red-900/20 transition-colors disabled:opacity-40"

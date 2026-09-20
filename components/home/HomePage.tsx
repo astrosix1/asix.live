@@ -170,19 +170,16 @@ export function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/projects/ascend">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-7 py-3.5 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors text-base shadow-sm"
-                  >
-                    Explore Ascend
-                    <ArrowRight size={18} />
-                  </motion.button>
+                <Link
+                  href="/projects/ascend"
+                  className="flex items-center gap-2 px-7 py-3.5 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all text-base shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Explore Ascend
+                  <ArrowRight size={18} />
                 </Link>
               </div>
 
-              <div className="flex items-center gap-6 text-sm text-slate-500 flex-wrap">
+              <div className="flex items-center gap-6 text-sm text-slate-400 flex-wrap">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle size={15} className="text-green-500" />
                   No commitment required
@@ -248,15 +245,12 @@ export function HomePage() {
               <p className="text-slate-400 text-lg leading-relaxed">
                 GeoIntel delivers real-time geopolitical intelligence on an interactive 3D globe. Built for analysts, researchers, and decision-makers who can&apos;t afford to be uninformed.
               </p>
-              <Link href="/projects/geointel">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-sm"
-                >
-                  Explore GeoIntel
-                  <ArrowRight size={18} />
-                </motion.button>
+              <Link
+                href="/projects/geointel"
+                className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Explore GeoIntel
+                <ArrowRight size={18} />
               </Link>
             </motion.div>
 
@@ -338,20 +332,18 @@ export function HomePage() {
               Three products. One portfolio. All built to make a real difference.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <Link href="/projects">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors shadow-sm"
-                >
-                  Browse All Products
-                  <ArrowRight size={20} />
-                </motion.button>
+              <Link
+                href="/projects"
+                className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Browse All Products
+                <ArrowRight size={20} />
               </Link>
-              <Link href="/projects/ascend">
-                <button className="px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors">
-                  Start with Ascend →
-                </button>
+              <Link
+                href="/projects/ascend"
+                className="px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors text-center"
+              >
+                Start with Ascend →
               </Link>
             </motion.div>
           </motion.div>
