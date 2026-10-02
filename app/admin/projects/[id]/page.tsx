@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getProjectBySlug } from '@/lib/projects';
+import { getProjectBySlug, type Project } from '@/lib/projects';
 import { ProjectForm } from '@/components/ProjectForm';
 
 export default function EditProjectPage({ params }: { params: { id: string } }) {
-  const [project, setProject] = useState<any>(null);
+  const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
       try {
         const data = await getProjectBySlug(params.id);
         setProject(data);
-      } catch (err) {
+      } catch {
         console.error('Failed to load project');
       } finally {
         setLoading(false);
