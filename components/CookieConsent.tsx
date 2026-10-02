@@ -9,7 +9,11 @@ export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // localStorage isn't available during SSR, so consent state can only be
+    // read after mount; this one-time setState can't be moved to a lazy
+    // useState initializer without causing a hydration mismatch.
     const stored = localStorage.getItem(STORAGE_KEY);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!stored) setVisible(true);
   }, []);
 

@@ -159,11 +159,12 @@ export default function ProjectsPage() {
                   {/* CTA */}
                   <div className="px-7 pb-7">
                     {p.available ? (
-                      <Link href={`/projects/${p.slug}`}>
-                        <button className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-sm hover:border-slate-500 hover:bg-slate-800 transition-colors group">
-                          View Product
-                          <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-                        </button>
+                      <Link
+                        href={`/projects/${p.slug}`}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-sm hover:border-slate-500 hover:bg-slate-800 transition-colors group"
+                      >
+                        View Product
+                        <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     ) : (
                       <div>
@@ -171,7 +172,7 @@ export default function ProjectsPage() {
                           Coming Soon
                         </div>
                         {'badge' in p && p.badge && (
-                          <p className="text-center text-xs text-slate-500 mt-2">{p.badge}</p>
+                          <p className="text-center text-xs text-slate-400 mt-2">{p.badge}</p>
                         )}
                       </div>
                     )}
@@ -216,20 +217,21 @@ export default function ProjectsPage() {
                   <p className="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">{plan.description}</p>
                   <div className="mb-6">
                     <span className="text-4xl font-bold text-white">{plan.price}</span>
-                    <span className="text-slate-500 ml-1">/mo</span>
+                    <span className="text-slate-400 ml-1">/mo</span>
                   </div>
                   <ul className="space-y-2.5 mb-8">
                     {plan.features.map((f) => (
                       <li key={f} className="flex items-center gap-2.5 text-slate-300 text-sm">
-                        <CheckCircle size={15} className="text-slate-500 flex-shrink-0" />
+                        <CheckCircle size={15} className="text-slate-400 flex-shrink-0" />
                         {f}
                       </li>
                     ))}
                   </ul>
-                  <Link href={plan.href} className="mt-auto">
-                    <button className={`w-full py-2.5 border-2 rounded-lg font-semibold transition-colors text-sm ${plan.btnClass}`}>
-                      {plan.cta}
-                    </button>
+                  <Link
+                    href={plan.href}
+                    className={`block mt-auto w-full py-2.5 border-2 rounded-lg font-semibold transition-colors text-sm text-center ${plan.btnClass}`}
+                  >
+                    {plan.cta}
                   </Link>
                 </div>
               </motion.div>
@@ -244,8 +246,8 @@ export default function ProjectsPage() {
             className="flex items-center justify-center gap-8 mt-10 flex-wrap"
           >
             {['Cancel anytime', 'No hidden fees', 'Instant access after payment'].map((text) => (
-              <span key={text} className="flex items-center gap-2 text-slate-500 text-sm">
-                <CheckCircle size={14} className="text-slate-600" />
+              <span key={text} className="flex items-center gap-2 text-slate-400 text-sm">
+                <CheckCircle size={14} className="text-slate-500" />
                 {text}
               </span>
             ))}

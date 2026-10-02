@@ -25,7 +25,7 @@ export default function About() {
           <section>
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Mission</h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-              We believe in building tools that make a real difference in people's lives. Our projects
+              We believe in building tools that make a real difference in people&apos;s lives. Our projects
               focus on solving specific problems with thoughtful design and robust engineering.
             </p>
           </section>
@@ -74,9 +74,9 @@ export default function About() {
 
           {/* CTA Section */}
           <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Let's Connect</h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Let&apos;s Connect</h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 mb-8">
-              Interested in learning more about our projects or collaborating? We'd love to hear from you!
+              Interested in learning more about our projects or collaborating? We&apos;d love to hear from you!
             </p>
             <Link href="/contact">
               <Button size="lg" className="gap-2">

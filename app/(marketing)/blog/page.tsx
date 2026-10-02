@@ -89,11 +89,11 @@ export default function BlogPage() {
             <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : loadError ? (
-          <p className="text-slate-500 text-center py-16 text-lg">
+          <p className="text-slate-400 text-center py-16 text-lg">
             Could not load posts. Please try refreshing the page.
           </p>
         ) : filtered.length === 0 ? (
-          <p className="text-slate-500 text-center py-16 text-lg">
+          <p className="text-slate-400 text-center py-16 text-lg">
             {activeTag ? `No posts tagged "${activeTag}".` : 'No posts yet.'}
           </p>
         ) : (

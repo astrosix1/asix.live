@@ -13,7 +13,7 @@ export default function ProjectGrid() {
             Featured Projects
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Discover the innovative applications we've built to tackle real-world challenges.
+            Discover the innovative applications we&apos;ve built to tackle real-world challenges.
           </p>
         </div>
 

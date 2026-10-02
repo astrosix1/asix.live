@@ -193,7 +193,7 @@ export default async function UseCasePage({
           >
             Start for {uc.price} <ArrowRight className="h-4 w-4" />
           </Link>
-          <p className="mt-4 text-sm text-slate-500">Cancel anytime. No hidden fees.</p>
+          <p className="mt-4 text-sm text-slate-400">Cancel anytime. No hidden fees.</p>
         </div>
       </section>
 

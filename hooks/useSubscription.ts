@@ -23,8 +23,9 @@ export function useSubscription(projectSlug: string): UseSubscriptionResult {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // Reset state when user changes
+    // Reset state when user changes, bailing out of the fetch below.
     if (!user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSubscription(null);
       setLoading(false);
       setError(null);

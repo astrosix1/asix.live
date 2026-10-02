@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Asix.live
 
-## Getting Started
+Personal portfolio and micro-SaaS platform for asix.live: a project gallery and
+blog, plus a subscription layer (Supabase Auth + Stripe) that gates access to
+three side projects — Ascend, GeoIntel, and WikiHole — each embedded via
+iframe on its own `*.asix.live` subdomain.
 
-First, run the development server:
+## Tech stack
+
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Auth + database:** Supabase (Postgres + Auth)
+- **Payments:** Stripe (subscriptions)
+- **Email:** Resend
+
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). See [SETUP.md](./SETUP.md)
+for environment variables, database setup, and deployment.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | Purpose |
+|---|---|
+| `app/` | Routes (App Router) — marketing pages, `admin/`, `dashboard/`, `account/`, and `api/` route handlers |
+| `components/` | React components, grouped by feature (`blog/`, `dashboard/`, `projects/`, `ui/`, ...) |
+| `lib/` | Server/client utilities — Supabase clients, Stripe price mapping, validation, etc. |
+| `supabase/migrations/` | The applied database migration history (source of truth for schema/RLS) |
+| `database-setup.sql` | Legacy single-file bootstrap script, kept for standalone new setups — see the note at its top |
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev     # Start dev server
+npm run build   # Production build
+npm start       # Start production server
+npm run lint    # Lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- No automated test suite exists yet.
+- The RLS policies in `supabase/migrations/` are the actual security boundary
+  for `projects`/`blog_posts`/`subscriptions` — the app's own admin-email
+  checks only protect the Next.js UI and API routes, not direct calls to the
+  Supabase REST API.

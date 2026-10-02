@@ -5,7 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useSubscription } from '@/hooks/useSubscription';
 
 interface ProjectTemplateWrapperProps {
-  project: any;
+  project: React.ComponentProps<typeof ProjectTemplate>['project'];
   projectSlug: 'ascend' | 'geointel' | 'wikihole';
   launchButtonComponent?: React.ReactNode;
 }

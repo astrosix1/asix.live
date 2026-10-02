@@ -101,7 +101,7 @@ export function AppCard({
 
         {/* Expiry */}
         <p className={`text-sm font-medium flex items-center gap-1.5 mt-auto ${
-          expired ? 'text-red-400' : expiringSoon ? 'text-amber-400' : 'text-slate-500'
+          expired ? 'text-red-400' : expiringSoon ? 'text-amber-400' : 'text-slate-400'
         }`}>
           {(expired || expiringSoon) && <AlertTriangle size={13} className="flex-shrink-0" />}
           {formatExpirationDate(expiresAt)}
@@ -111,21 +111,24 @@ export function AppCard({
       {/* Launch button */}
       <div className="px-6 pb-6">
         {expired ? (
-          <a href="/checkout" className="block">
-            <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors text-sm">
-              <RefreshCw size={15} />
-              Renew Subscription
-            </button>
+          <a
+            href="/checkout"
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors text-sm"
+          >
+            <RefreshCw size={15} />
+            Renew Subscription
           </a>
         ) : (
-          <a href={launchUrl} target="_blank" rel="noopener noreferrer" className="block">
-            <button
-              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold transition-colors text-sm ${theme.btnClass} disabled:opacity-50`}
-              disabled={isLoading}
-            >
-              Launch {appName}
-              <ArrowRight size={15} />
-            </button>
+          <a
+            href={launchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled={isLoading}
+            onClick={(e) => { if (isLoading) e.preventDefault(); }}
+            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold transition-colors text-sm ${theme.btnClass} ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}
+          >
+            Launch {appName}
+            <ArrowRight size={15} />
           </a>
         )}
       </div>

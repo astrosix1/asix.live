@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
 
 interface ProjectCardProps {
@@ -17,7 +17,6 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({
-  id,
   slug,
   name,
   tagline,
@@ -61,10 +60,8 @@ export default function ProjectCard({
 
       {/* Footer */}
       <CardContent className="pt-0">
-        <Link href={`/projects/${slug}`}>
-          <Button className="w-full" variant="default">
-            Explore <ArrowRight size={16} className="ml-2" />
-          </Button>
+        <Link href={`/projects/${slug}`} className={buttonVariants({ variant: 'default', className: 'w-full' })}>
+          Explore <ArrowRight size={16} className="ml-2" />
         </Link>
       </CardContent>
     </Card>
