@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { buildHandoffUrl, parseReturnTo } from '@/lib/return-to';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,12 +19,27 @@ export default function LoginPage() {
   const rawRedirect = searchParams.get('redirect') || '/';
   const redirectUri = rawRedirect.startsWith('/') ? rawRedirect : '/';
 
+  // Sign-in handoff for other asix.live apps (e.g. GeoIntel): after login, send
+  // the user back to `return_to` with the access token in the URL fragment.
+  // parseReturnTo() allowlists the target — it never accepts arbitrary hosts.
+  const rawReturnTo = searchParams.get('return_to');
+
+  const handoffTo = (session: { access_token: string; expires_in?: number }) => {
+    const target = parseReturnTo(rawReturnTo, window.location.hostname);
+    if (!target) return false;
+    window.location.replace(buildHandoffUrl(target, session));
+    return true;
+  };
+
   useEffect(() => {
     const sb = supabase;
     if (!sb) return;
     const checkAuth = async () => {
       const { data: { session } } = await sb.auth.getSession();
-      if (session) router.push(redirectUri);
+      if (!session) return;
+      // Already signed in on asix.live: bounce straight back to the calling app.
+      if (handoffTo(session)) return;
+      router.push(redirectUri);
     };
     checkAuth();
   }, []);
@@ -38,12 +54,14 @@ export default function LoginPage() {
 
       // Sign in directly via the browser client so it stores the session
       // in cookies using the format that createServerClient can read server-side.
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         setError(error.message);
         return;
       }
+
+      if (data.session && handoffTo(data.session)) return;
 
       // Hard redirect (not router.push) — AuthProvider's context update from
       // signInWithPassword's SIGNED_IN notification hasn't necessarily

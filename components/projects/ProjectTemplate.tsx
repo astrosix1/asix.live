@@ -28,6 +28,15 @@ const CHECKOUT_INFO = {
   wikihole: { plan: 'basic',    priceLabel: '7 days free', priceNote: 'Then $4.99/month. Cancel anytime.' },
 } as const;
 
+// Apps anyone can launch (signed in or not). For these, a subscription unlocks
+// premium features inside the app rather than access to it. Flip an app to
+// true once its free/premium split is decided.
+const FREE_TO_LAUNCH: Record<'ascend' | 'geointel' | 'wikihole', boolean> = {
+  ascend: false,
+  geointel: true,
+  wikihole: false,
+};
+
 // Per-product theme tokens
 const THEMES = {
   ascend: {
@@ -212,6 +221,7 @@ export function ProjectTemplate({
   const features = FEATURES[projectSlug];
   const aboutExtra = ABOUT_EXTRA[projectSlug];
   const screenshots = SCREENSHOTS[projectSlug];
+  const freeToLaunch = FREE_TO_LAUNCH[projectSlug];
 
   return (
     <div className="min-h-screen bg-[#0F172A]">
@@ -336,13 +346,16 @@ export function ProjectTemplate({
               : projectSlug === 'wikihole'
               ? 'Try WikiHole free for 7 days. No card required until your trial ends.'
               : projectSlug === 'geointel'
-              ? 'Unlock geopolitical intelligence and stay ahead of global events.'
+              ? 'Launch GeoIntel free — go Premium to unlock the full intelligence toolkit.'
               : 'Start exploring rabbit holes — included free in the Essentials plan.'}
           </p>
 
-          {/* Price — shown only to visitors who are not signed in */}
-          {!isLoggedIn && (
+          {/* Price — shown to anyone who doesn't already have access */}
+          {(freeToLaunch ? !userHasAccess : !isLoggedIn) && (
             <div className="mb-8">
+              {freeToLaunch && (
+                <p className="text-sm font-semibold uppercase tracking-widest text-slate-400 mb-2">Premium</p>
+              )}
               <p className="text-5xl font-bold text-white mb-1">
                 {CHECKOUT_INFO[projectSlug].priceLabel}
               </p>
@@ -355,7 +368,21 @@ export function ProjectTemplate({
           )}
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {!isLoggedIn ? (
+            {freeToLaunch ? (
+              /* Free-to-launch app: everyone can open it; Premium is the upsell */
+              <>
+                {launchButtonComponent}
+                {!userHasAccess && (
+                  <Link
+                    href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}
+                    className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}
+                  >
+                    Go Premium
+                    <ArrowRight size={20} />
+                  </Link>
+                )}
+              </>
+            ) : !isLoggedIn ? (
               /* Logged-out visitor: Subscribe Now / Start Free Trial */
               <Link href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}>
                 <button className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}>
@@ -375,7 +402,7 @@ export function ProjectTemplate({
             </Link>
           </div>
 
-          {!isLoggedIn && projectSlug === 'geointel' && (
+          {!userHasAccess && projectSlug === 'geointel' && (
             <p className="text-sm text-slate-500 mt-6">Cancel anytime. No hidden fees.</p>
           )}
         </div>
