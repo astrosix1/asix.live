@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { APP_PRICES, formatPrice } from '@/lib/stripe-prices';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 interface CartItem {
   appSlug: string;
@@ -68,14 +69,24 @@ export default function CheckoutPage() {
     setProcessing(true);
 
     try {
+      // create-session now authenticates the caller itself (rather than
+      // trusting a client-supplied userId/userEmail) — send a fresh access
+      // token the same way the dashboard's authenticated calls do, since a
+      // same-origin fetch here doesn't reliably carry a usable session
+      // cookie for the server to fall back on.
+      let token: string | undefined;
+      if (supabase) {
+        const { data } = await supabase.auth.getSession();
+        token = data.session?.access_token;
+      }
+
       const response = await fetch('/api/checkout/create-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart,
-          userId: user.id,
-          userEmail: user.email,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ items: cart }),
       });
 
       const data = await response.json();

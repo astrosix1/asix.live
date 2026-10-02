@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingUp, Zap, Database } from 'lucide-react';
+import { BarChart3, Database } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 interface Analytics {
@@ -27,25 +27,6 @@ interface Analytics {
     used: number;
     limit: number;
   };
-}
-
-function StatCard({ icon: Icon, title, value, unit, trend }: any) {
-  return (
-    <div className="bg-[#1E293B] rounded-lg border border-slate-700/60 p-4">
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <p className="text-slate-400 text-sm font-medium">{title}</p>
-          <p className="text-2xl font-bold text-white mt-1">{value.toLocaleString()}{unit && <span className="text-sm ml-1">{unit}</span>}</p>
-        </div>
-        <Icon size={20} className="text-blue-400 flex-shrink-0" />
-      </div>
-      {trend && (
-        <p className="text-xs text-green-400 flex items-center gap-1">
-          <TrendingUp size={14} /> {trend}
-        </p>
-      )}
-    </div>
-  );
 }
 
 export function AnalyticsDashboard() {
