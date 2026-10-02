@@ -21,6 +21,7 @@ interface DashboardSubscription {
   plan: string;
   status: string;
   currentPeriodEnd: string | null;
+  cancelAtPeriodEnd?: boolean;
   externalUrl: string | null;
 }
 
@@ -114,7 +115,7 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to cancel');
       // Update local state to reflect pending cancellation
       setSubscriptions(prev => prev.map(s =>
-        s.id === sub.id ? { ...s, cancelAtPeriodEnd: true } as any : s
+        s.id === sub.id ? { ...s, cancelAtPeriodEnd: true } : s
       ));
       setCancelSuccess(`${sub.projectName} will be cancelled at the end of your billing period.`);
       setCancelConfirm(null);
@@ -140,7 +141,7 @@ export default function DashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to reactivate');
       setSubscriptions(prev => prev.map(s =>
-        s.id === sub.id ? { ...s, cancelAtPeriodEnd: false } as any : s
+        s.id === sub.id ? { ...s, cancelAtPeriodEnd: false } : s
       ));
       setCancelSuccess(`${sub.projectName} subscription reactivated!`);
       setTimeout(() => setCancelSuccess(null), 4000);
@@ -306,7 +307,7 @@ export default function DashboardPage() {
           {!isLoading && !isAdmin && subscriptions.length > 0 && (
             <div className="mt-6 space-y-3">
               {subscriptions.filter(s => s.status === 'active').map(sub => {
-                const isPendingCancel = (sub as any).cancelAtPeriodEnd;
+                const isPendingCancel = sub.cancelAtPeriodEnd;
                 return (
                   <div key={sub.id} className="flex items-center justify-between p-4 bg-[#1E293B] border border-slate-700 rounded-xl">
                     <div>
@@ -412,7 +413,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between px-6 py-4">
               <div>
                 <p className="text-sm font-medium text-white">Sign out of your account</p>
-                <p className="text-sm text-slate-400 mt-0.5">You'll need to sign in again to access your apps</p>
+                <p className="text-sm text-slate-400 mt-0.5">You&apos;ll need to sign in again to access your apps</p>
               </div>
               <button
                 onClick={handleSignOut}

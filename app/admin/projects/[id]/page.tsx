@@ -13,7 +13,7 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
       try {
         const data = await getProjectBySlug(params.id);
         setProject(data);
-      } catch (err) {
+      } catch {
         console.error('Failed to load project');
       } finally {
         setLoading(false);

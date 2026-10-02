@@ -75,7 +75,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
           setConfirmPassword('');
         }
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);

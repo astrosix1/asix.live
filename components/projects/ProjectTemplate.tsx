@@ -13,8 +13,8 @@ interface ProjectTemplateProps {
     image?: string;
     category?: string;
     color?: string;
-    features: string[];
-    externalUrl?: string;
+    features: readonly string[];
+    externalUrl?: string | null;
   };
   projectSlug: 'ascend' | 'geointel' | 'wikihole';
   launchButtonComponent?: React.ReactNode;

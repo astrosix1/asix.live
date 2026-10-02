@@ -13,7 +13,7 @@ export default function AdminProjectsPage() {
       try {
         const data = await getAllProjects();
         setProjects(data);
-      } catch (err) {
+      } catch {
         console.error('Failed to load projects');
       } finally {
         setLoading(false);
@@ -28,7 +28,7 @@ export default function AdminProjectsPage() {
       try {
         await deleteProject(id);
         setProjects(projects.filter((p) => p.id !== id));
-      } catch (err) {
+      } catch {
         alert('Failed to delete project');
       }
     }

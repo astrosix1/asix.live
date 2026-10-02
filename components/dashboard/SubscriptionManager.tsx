@@ -42,7 +42,7 @@ export function SubscriptionManager({
   if (subscriptions.length === 0) {
     return (
       <div className="bg-[#1E293B] rounded-xl border border-slate-700/60 p-10 text-center">
-        <p className="text-slate-400 mb-6">You don't have any subscriptions yet.</p>
+        <p className="text-slate-400 mb-6">You don&apos;t have any subscriptions yet.</p>
         <Link
           href="/projects"
           className="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:bg-slate-800 transition-colors"

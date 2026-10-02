@@ -60,16 +60,21 @@ export async function POST(req: NextRequest) {
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
 
-        // Retrieve the Stripe customer to get the userId stored in metadata at checkout
-        const customer = await stripe.customers.retrieve(subscription.customer as string);
-        if (customer.deleted) {
-          console.error('Customer deleted:', subscription.customer);
-          break;
-        }
-
-        const userId = customer.metadata?.userId;
+        // userId is stamped on the Subscription itself at checkout (see
+        // create-session's subscription_data.metadata) — that's the primary
+        // source since it's set unconditionally on every subscription this
+        // app creates. Fall back to Customer metadata for defense in depth.
+        let userId = subscription.metadata?.userId;
         if (!userId) {
-          console.error('No userId in Stripe customer metadata for customer:', subscription.customer);
+          const customer = await stripe.customers.retrieve(subscription.customer as string);
+          if (customer.deleted) {
+            console.error('Customer deleted:', subscription.customer);
+            break;
+          }
+          userId = customer.metadata?.userId;
+        }
+        if (!userId) {
+          console.error('No userId in subscription or customer metadata for subscription:', subscription.id);
           break;
         }
 
