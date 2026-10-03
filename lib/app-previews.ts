@@ -22,5 +22,9 @@ export const SCREENSHOTS: Record<'ascend' | 'geointel' | 'wikihole', AppScreensh
     { src: '/images/projects/geointel-relationships.png', alt: 'GeoIntel Relationships', width: 1551, height: 746 },
     { src: '/images/projects/geointel-trend.png', alt: 'GeoIntel Trend', width: 356, height: 352 },
   ],
-  wikihole: [],
+  wikihole: [
+    { src: '/images/projects/wikihole-article.png', alt: 'WikiHole article with related rabbit holes', width: 1917, height: 887 },
+    { src: '/images/projects/wikihole-discover.png', alt: 'WikiHole Discover page', width: 1917, height: 887 },
+    { src: '/images/projects/wikihole-quiz.png', alt: 'WikiHole quiz', width: 1917, height: 887 },
+  ],
 };
