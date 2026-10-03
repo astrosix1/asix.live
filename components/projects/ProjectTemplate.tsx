@@ -43,7 +43,7 @@ const FREE_TO_LAUNCH: Record<'ascend' | 'geointel' | 'wikihole', boolean> = {
 // page shows no price or "Go Premium" button — there's nothing to buy yet.
 // Flip an app to true when its premium features ship.
 const PREMIUM_AVAILABLE: Record<'ascend' | 'geointel' | 'wikihole', boolean> = {
-  ascend: false,
+  ascend: true,
   geointel: true,
   wikihole: false,
 };
@@ -341,7 +341,7 @@ export function ProjectTemplate({
             {freeToLaunch && !premiumAvailable
               ? `${project.name} is free to use. Premium features are coming soon.`
               : projectSlug === 'ascend'
-              ? "Try Ascend free for 7 days. You won't be charged until your trial ends."
+              ? 'Launch Ascend free — go Premium to unlock Advanced insights.'
               : projectSlug === 'wikihole'
               ? "Try WikiHole free for 7 days. You won't be charged until your trial ends."
               : projectSlug === 'geointel'

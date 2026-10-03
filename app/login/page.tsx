@@ -24,7 +24,7 @@ export default function LoginPage() {
   // parseReturnTo() allowlists the target — it never accepts arbitrary hosts.
   const rawReturnTo = searchParams.get('return_to');
 
-  const handoffTo = (session: { access_token: string; expires_in?: number }) => {
+  const handoffTo = (session: { access_token: string; refresh_token?: string; expires_in?: number }) => {
     const target = parseReturnTo(rawReturnTo, window.location.hostname);
     if (!target) return false;
     window.location.replace(buildHandoffUrl(target, session));

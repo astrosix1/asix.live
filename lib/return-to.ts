@@ -11,6 +11,13 @@
 const ALLOWED_ROOT_HOST = 'asix.live';
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
 
+// Apps that install the session themselves with setSession() and so need the
+// refresh token too (the same shape as the "Launch" links on asix.live).
+// Everything else (e.g. GeoIntel, which verifies the access token server-side)
+// gets only the access token: a refresh token is long-lived, so it goes only
+// to apps that can't work without it.
+const REFRESH_TOKEN_HOSTS = new Set(['ascend.asix.live', 'wikihole.asix.live']);
+
 /**
  * Returns a sanitized URL (origin + path + query, no fragment) if `raw` is an
  * allowed handoff target, otherwise null.
@@ -51,12 +58,15 @@ export function parseReturnTo(raw: string | null, currentHostname: string): URL 
 /** Build the redirect URL carrying the access token in the fragment. */
 export function buildHandoffUrl(
   target: URL,
-  session: { access_token: string; expires_in?: number }
+  session: { access_token: string; refresh_token?: string; expires_in?: number }
 ): string {
   const fragment = new URLSearchParams({
     access_token: session.access_token,
     token_type: 'bearer',
   });
+  if (session.refresh_token && REFRESH_TOKEN_HOSTS.has(target.hostname.toLowerCase())) {
+    fragment.set('refresh_token', session.refresh_token);
+  }
   if (typeof session.expires_in === 'number') {
     fragment.set('expires_in', String(session.expires_in));
   }

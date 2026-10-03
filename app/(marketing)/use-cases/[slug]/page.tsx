@@ -68,12 +68,14 @@ export default async function UseCasePage({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={`/checkout?plan=${uc.checkoutPlan}`}
+            <a
+              href="https://ascend.asix.live"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 px-7 py-3.5 text-base font-semibold text-white transition-colors"
             >
-              Get Started — {uc.price} <ArrowRight className="h-4 w-4" />
-            </Link>
+              Try Ascend free <ArrowRight className="h-4 w-4" />
+            </a>
             <a
               href="#how-it-works"
               className="inline-flex items-center justify-center rounded-lg border border-slate-700 hover:border-slate-500 px-7 py-3.5 text-base font-medium text-slate-300 hover:text-white transition-colors"
@@ -160,7 +162,7 @@ export default async function UseCasePage({
       <section className="bg-[#0F172A] py-20 px-4">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-4">Everything you need to make it stick</h2>
-          <p className="text-slate-400 mb-10">One subscription unlocks the full Ascend app.</p>
+          <p className="text-slate-400 mb-10">Ascend is free to use. Premium adds Advanced insights.</p>
           <div className="grid sm:grid-cols-2 gap-4 text-left mb-10">
             {[
               'Unlimited habits to track',
@@ -187,12 +189,22 @@ export default async function UseCasePage({
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">{uc.ctaHeadline}</h2>
           <p className="text-slate-400 text-lg mb-8">{uc.ctaBody}</p>
-          <Link
-            href={`/checkout?plan=${uc.checkoutPlan}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 px-8 py-4 text-base font-semibold text-white transition-colors"
-          >
-            Start for {uc.price} <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://ascend.asix.live"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 px-8 py-4 text-base font-semibold text-white transition-colors"
+            >
+              Try Ascend free <ArrowRight className="h-4 w-4" />
+            </a>
+            <Link
+              href={`/checkout?plan=${uc.checkoutPlan}`}
+              className="inline-flex items-center justify-center rounded-lg border border-slate-700 hover:border-slate-500 px-8 py-4 text-base font-medium text-slate-300 hover:text-white transition-colors"
+            >
+              Go Premium — {uc.price}
+            </Link>
+          </div>
           <p className="mt-4 text-sm text-slate-400">Cancel anytime. No hidden fees.</p>
         </div>
       </section>
