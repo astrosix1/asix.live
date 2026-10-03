@@ -229,7 +229,7 @@ export default function DashboardPage() {
             <div>
               <p className="text-slate-400 text-sm font-medium mb-1">{getGreeting()}</p>
               <h1 className="text-3xl font-bold text-white">{displayName}</h1>
-              <p className="text-slate-500 text-sm mt-1">{user.email}</p>
+              <p className="text-slate-400 text-sm mt-1">{user.email}</p>
             </div>
             <button
               onClick={handleSignOut}
@@ -391,10 +391,11 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-white">Email address</p>
                 <p className="text-sm text-slate-400 mt-0.5">{user.email}</p>
               </div>
-              <Link href="/account/email">
-                <button className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors">
-                  Change
-                </button>
+              <Link
+                href="/account/email"
+                className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors"
+              >
+                Change
               </Link>
             </div>
             <div className="flex items-center justify-between px-6 py-4">
@@ -402,10 +403,11 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-white">Password</p>
                 <p className="text-sm text-slate-400 mt-0.5">••••••••••••</p>
               </div>
-              <Link href="/account/password">
-                <button className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors">
-                  Change
-                </button>
+              <Link
+                href="/account/password"
+                className="text-xs font-semibold px-3 py-1.5 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-colors"
+              >
+                Change
               </Link>
             </div>
             <div className="flex items-center justify-between px-6 py-4">
@@ -425,10 +427,11 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-white">Delete account</p>
                 <p className="text-sm text-slate-400 mt-0.5">Permanently remove your account and all data</p>
               </div>
-              <Link href="/account/delete">
-                <button className="text-xs font-semibold px-3 py-1.5 border border-red-900/60 text-red-400 rounded-lg hover:bg-red-900/20 transition-colors">
-                  Delete
-                </button>
+              <Link
+                href="/account/delete"
+                className="text-xs font-semibold px-3 py-1.5 border border-red-900/60 text-red-400 rounded-lg hover:bg-red-900/20 transition-colors"
+              >
+                Delete
               </Link>
             </div>
           </div>
@@ -442,11 +445,12 @@ export default function DashboardPage() {
             <p className="text-slate-400 text-sm mb-8 max-w-sm mx-auto">
               Browse our collection of apps and subscribe to get started.
             </p>
-            <Link href="/projects">
-              <button className="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:bg-slate-800 transition-colors">
-                Browse Products
-                <ArrowRight size={16} />
-              </button>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:bg-slate-800 transition-colors"
+            >
+              Browse Products
+              <ArrowRight size={16} />
             </Link>
           </section>
         )}

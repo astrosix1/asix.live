@@ -37,24 +37,26 @@ export default function NotFound() {
         <div className="space-y-4">
           <p className="text-slate-400">Here are some helpful links instead:</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/">
-              <button className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors w-full sm:w-auto">
-                <Home size={18} />
-                Back to Home
-              </button>
+            <Link
+              href="/"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors w-full sm:w-auto"
+            >
+              <Home size={18} />
+              Back to Home
             </Link>
-            <Link href="/projects">
-              <button className="flex items-center justify-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-semibold transition-colors w-full sm:w-auto">
-                Browse Products
-                <ArrowRight size={18} />
-              </button>
+            <Link
+              href="/projects"
+              className="flex items-center justify-center gap-2 px-6 py-3 border-2 border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-semibold transition-colors w-full sm:w-auto"
+            >
+              Browse Products
+              <ArrowRight size={18} />
             </Link>
           </div>
         </div>
 
         {/* Quick Links */}
         <div className="pt-8 border-t border-slate-800">
-          <p className="text-slate-500 text-sm mb-4">Quick Navigation</p>
+          <p className="text-slate-400 text-sm mb-4">Quick Navigation</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <Link href="/" className="text-slate-400 hover:text-white text-sm transition-colors">
               Home

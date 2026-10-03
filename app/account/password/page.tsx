@@ -211,13 +211,11 @@ export default function ChangePasswordPage() {
               >
                 {isSubmitting ? 'Updating…' : 'Update Password'}
               </button>
-              <Link href="/dashboard" className="flex-1">
-                <button
-                  type="button"
-                  className="w-full px-6 py-3 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-semibold transition-colors"
-                >
-                  Cancel
-                </button>
+              <Link
+                href="/dashboard"
+                className="flex-1 text-center px-6 py-3 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-semibold transition-colors"
+              >
+                Cancel
               </Link>
             </div>
           </form>

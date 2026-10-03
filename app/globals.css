@@ -40,6 +40,17 @@ a, button {
   transition: all 0.2s ease-in-out;
 }
 
+/* Branded keyboard-focus ring. Only shows for keyboard navigation
+   (:focus-visible), not mouse clicks. Without this, links/buttons that
+   don't declare their own focus-visible ring utility fall back to the
+   browser's generic default outline. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

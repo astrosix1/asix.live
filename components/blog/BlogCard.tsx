@@ -25,7 +25,7 @@ export default function BlogCard({ post }: BlogCardProps) {
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
-            <span className="text-slate-500 text-4xl">✍️</span>
+            <span className="text-slate-400 text-4xl">✍️</span>
           </div>
         )}
       </div>
@@ -57,7 +57,7 @@ export default function BlogCard({ post }: BlogCardProps) {
 
         {/* Footer */}
         <div className="flex items-center justify-between">
-          <div className="text-slate-500 text-xs">
+          <div className="text-slate-400 text-xs">
             <span>{post.author}</span>
             <span className="mx-1.5">·</span>
             <span>{formattedDate}</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BarChart3, Trophy, TrendingUp, Users, Star, Cloud, Globe, Zap, Shield, Database, Bell, BookOpen, Brain } from 'lucide-react';
 import { AccessBanner } from './AccessBanner';
 
@@ -176,19 +177,22 @@ const FEATURES = {
 };
 
 // ── Screenshot galleries ────────────────────────────────────────────────────
+// width/height are the source PNGs' actual pixel dimensions — required by
+// next/image to compute the right aspect ratio (and avoid layout shift)
+// since these are displayed responsively at less than their native size.
 const SCREENSHOTS = {
   ascend: [
-    { src: '/images/projects/ascend-dashboard.png', alt: 'Ascend Dashboard' },
-    { src: '/images/projects/ascend-events.png', alt: 'Ascend Discover Events' },
-    { src: '/images/projects/ascend-graphs.png', alt: 'Ascend Progress Graphs' },
-    { src: '/images/projects/ascend-timer.png', alt: 'Ascend Pomodoro Timer' },
+    { src: '/images/projects/ascend-dashboard.png', alt: 'Ascend Dashboard', width: 1917, height: 650 },
+    { src: '/images/projects/ascend-events.png', alt: 'Ascend Discover Events', width: 1617, height: 816 },
+    { src: '/images/projects/ascend-graphs.png', alt: 'Ascend Progress Graphs', width: 1616, height: 817 },
+    { src: '/images/projects/ascend-timer.png', alt: 'Ascend Pomodoro Timer', width: 1617, height: 817 },
   ],
   geointel: [
-    { src: '/images/projects/geointel-dashboard.png', alt: 'GeoIntel Dashboard' },
-    { src: '/images/projects/geointel-brief.png', alt: 'GeoIntel Brief' },
-    { src: '/images/projects/geointel-forecast.png', alt: 'GeoIntel Forecast' },
-    { src: '/images/projects/geointel-relationships.png', alt: 'GeoIntel Relationships' },
-    { src: '/images/projects/geointel-trend.png', alt: 'GeoIntel Trend' },
+    { src: '/images/projects/geointel-dashboard.png', alt: 'GeoIntel Dashboard', width: 1920, height: 913 },
+    { src: '/images/projects/geointel-brief.png', alt: 'GeoIntel Brief', width: 905, height: 906 },
+    { src: '/images/projects/geointel-forecast.png', alt: 'GeoIntel Forecast', width: 1547, height: 898 },
+    { src: '/images/projects/geointel-relationships.png', alt: 'GeoIntel Relationships', width: 1551, height: 746 },
+    { src: '/images/projects/geointel-trend.png', alt: 'GeoIntel Trend', width: 356, height: 352 },
   ],
   wikihole: [],
 };
@@ -283,9 +287,12 @@ export function ProjectTemplate({
             <div className="space-y-6">
               {screenshots.map((screenshot) => (
                 <div key={screenshot.src} className="group overflow-hidden rounded-lg">
-                  <img
+                  <Image
                     src={screenshot.src}
                     alt={screenshot.alt}
+                    width={screenshot.width}
+                    height={screenshot.height}
+                    sizes="(min-width: 1024px) 896px, 100vw"
                     className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -332,9 +339,9 @@ export function ProjectTemplate({
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Ready to get started?</h2>
           <p className="text-xl text-slate-400 mb-10">
             {projectSlug === 'ascend'
-              ? 'Try Ascend free for 7 days. No card required until your trial ends.'
+              ? "Try Ascend free for 7 days. You won't be charged until your trial ends."
               : projectSlug === 'wikihole'
-              ? 'Try WikiHole free for 7 days. No card required until your trial ends.'
+              ? "Try WikiHole free for 7 days. You won't be charged until your trial ends."
               : projectSlug === 'geointel'
               ? 'Unlock geopolitical intelligence and stay ahead of global events.'
               : 'Start exploring rabbit holes — included free in the Essentials plan.'}
@@ -357,26 +364,28 @@ export function ProjectTemplate({
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!isLoggedIn ? (
               /* Logged-out visitor: Subscribe Now / Start Free Trial */
-              <Link href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}>
-                <button className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}>
-                  {projectSlug === 'ascend' || projectSlug === 'wikihole' ? 'Start Free Trial' : 'Subscribe Now'}
-                  <ArrowRight size={20} />
-                </button>
+              <Link
+                href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}
+                className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}
+              >
+                {projectSlug === 'ascend' || projectSlug === 'wikihole' ? 'Start Free Trial' : 'Subscribe Now'}
+                <ArrowRight size={20} />
               </Link>
             ) : launchButtonComponent ? (
               /* Logged-in subscriber: open the app */
               launchButtonComponent
             ) : null}
-            <Link href="/contact">
-              <button className="flex items-center gap-2 px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors">
-                Get in Touch
-                <ArrowRight size={20} />
-              </button>
+            <Link
+              href="/contact"
+              className="flex items-center gap-2 px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors"
+            >
+              Get in Touch
+              <ArrowRight size={20} />
             </Link>
           </div>
 
           {!isLoggedIn && projectSlug === 'geointel' && (
-            <p className="text-sm text-slate-500 mt-6">Cancel anytime. No hidden fees.</p>
+            <p className="text-sm text-slate-400 mt-6">Cancel anytime. No hidden fees.</p>
           )}
         </div>
       </section>
