@@ -68,20 +68,10 @@ export function HomePage() {
       <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-x-14 gap-y-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-center lg:px-8 lg:py-16">
-        {/* Heading. On small screens the order is heading → preview → cards. */}
-        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-blue-400">Free to use</p>
-          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Pick an app and jump in.
-          </h1>
-          <p className="mt-3 text-slate-400">
-            No account needed. Upgrade only for premium features.
-          </p>
-        </div>
-
+      <h1 className="sr-only">Asix apps: Ascend, GeoIntel and WikiHole</h1>
+      <div className="relative mx-auto grid max-w-7xl items-center gap-x-14 gap-y-8 px-4 py-12 sm:px-6 lg:min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:px-8 lg:py-16">
         {/* App cards and upgrade */}
-        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 lg:self-start">
+        <div className="order-2 lg:order-none lg:col-start-1">
           <ul className="space-y-3">
             {APPS.map((app) => (
               <AppRow
@@ -104,7 +94,7 @@ export function HomePage() {
         </div>
 
         {/* Live preview of the app under the cursor */}
-        <div className="order-2 lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+        <div className="order-first lg:order-none lg:col-start-2">
           <Preview key={activeApp.slug} app={activeApp} />
         </div>
       </div>
@@ -168,16 +158,8 @@ function Preview({ app }: { app: LauncherApp }) {
   }, [slides.length]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-2xl shadow-black/40 backdrop-blur">
-      {/* Window chrome */}
-      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="ml-3 truncate rounded-md bg-white/5 px-3 py-0.5 text-xs text-slate-400">{app.host}</span>
-      </div>
-
-      <div className="relative aspect-[16/10] w-full bg-[#0B1120]" aria-live="polite">
+    <div>
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl shadow-2xl shadow-black/50" aria-live="polite">
         {slides.length > 0 ? (
           slides.map((slide, i) => (
             <Image
@@ -187,7 +169,7 @@ function Preview({ app }: { app: LauncherApp }) {
               aria-hidden={i !== index}
               fill
               sizes="(min-width: 1024px) 55vw, 100vw"
-              className={`object-contain p-2 transition-opacity duration-500 ${i === index ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-contain transition-opacity duration-500 ${i === index ? 'opacity-100' : 'opacity-0'}`}
             />
           ))
         ) : (
@@ -204,7 +186,7 @@ function Preview({ app }: { app: LauncherApp }) {
       </div>
 
       {slides.length > 1 && (
-        <div className="flex items-center justify-center gap-2 border-t border-white/10 py-3">
+        <div className="flex items-center justify-center gap-2 pt-4">
           {slides.map((slide, i) => (
             <button
               key={slide.src}
