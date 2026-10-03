@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, BarChart3, Trophy, TrendingUp, Users, Star, Cloud, Globe, Zap, Shield, Database, Bell, BookOpen, Brain } from 'lucide-react';
 import { AccessBanner } from './AccessBanner';
+import { SCREENSHOTS } from '@/lib/app-previews';
 
 interface ProjectTemplateProps {
   project: {
@@ -192,27 +193,6 @@ const FEATURES = {
       { icon: <Brain size={24} className="text-amber-400" />, title: 'Mastery Tracking', desc: 'See your knowledge score per rabbit hole trail. Unlock mastery when you ace all the cards.' },
     ],
   },
-};
-
-// ── Screenshot galleries ────────────────────────────────────────────────────
-// width/height are the source PNGs' actual pixel dimensions — required by
-// next/image to compute the right aspect ratio (and avoid layout shift)
-// since these are displayed responsively at less than their native size.
-const SCREENSHOTS = {
-  ascend: [
-    { src: '/images/projects/ascend-dashboard.png', alt: 'Ascend Dashboard', width: 1917, height: 650 },
-    { src: '/images/projects/ascend-events.png', alt: 'Ascend Discover Events', width: 1617, height: 816 },
-    { src: '/images/projects/ascend-graphs.png', alt: 'Ascend Progress Graphs', width: 1616, height: 817 },
-    { src: '/images/projects/ascend-timer.png', alt: 'Ascend Pomodoro Timer', width: 1617, height: 817 },
-  ],
-  geointel: [
-    { src: '/images/projects/geointel-dashboard.png', alt: 'GeoIntel Dashboard', width: 1920, height: 913 },
-    { src: '/images/projects/geointel-brief.png', alt: 'GeoIntel Brief', width: 905, height: 906 },
-    { src: '/images/projects/geointel-forecast.png', alt: 'GeoIntel Forecast', width: 1547, height: 898 },
-    { src: '/images/projects/geointel-relationships.png', alt: 'GeoIntel Relationships', width: 1551, height: 746 },
-    { src: '/images/projects/geointel-trend.png', alt: 'GeoIntel Trend', width: 356, height: 352 },
-  ],
-  wikihole: [],
 };
 
 // ── About copy ───────────────────────────────────────────────────────────────
