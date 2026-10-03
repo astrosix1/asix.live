@@ -1,7 +1,10 @@
 import { redirect } from 'next/navigation';
 import { getSupabaseServer } from '@/lib/supabase-server';
 
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '')
+// Server-only var (no NEXT_PUBLIC_ prefix): this is read only in a Server
+// Component/API routes, so there's no reason to ship the admin allowlist to
+// every visitor's JS bundle.
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? '')
   .split(',')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);

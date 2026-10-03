@@ -1,3 +1,23 @@
+-- NOTE: this file is a legacy, single-shot bootstrap script from before this
+-- project adopted `supabase/migrations/`. If you're setting up a NEW Supabase
+-- project, prefer running the numbered files in supabase/migrations/ in
+-- order instead — they're the actual applied history and include fixes
+-- (e.g. 002_fix_rls_add_wikihole.sql, 003_restrict_write_access_to_admin.sql)
+-- that this file's original version predates. This file has been patched to
+-- match the same admin-only write policy so it's still safe to run
+-- standalone, but the two sources of truth for schema/policies should be
+-- reconciled (drop this file, or fold it into the migrations folder).
+
+-- Single source of truth for "is this JWT an admin" — keep in sync with the
+-- ADMIN_EMAILS env var used by the app.
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT COALESCE(auth.jwt() ->> 'email', '') IN ('collins.nick999@gmail.com');
+$$;
+
 -- Create projects table for portfolio
 CREATE TABLE IF NOT EXISTS projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -20,21 +40,15 @@ CREATE POLICY "Public can read published projects"
   ON projects FOR SELECT
   USING (is_published = true);
 
--- Policy 2: Authenticated users can create projects
-CREATE POLICY "Authenticated users can create projects"
-  ON projects FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
-
--- Policy 3: Authenticated users can update projects
-CREATE POLICY "Authenticated users can update projects"
-  ON projects FOR UPDATE
-  USING (auth.role() = 'authenticated')
-  WITH CHECK (auth.role() = 'authenticated');
-
--- Policy 4: Authenticated users can delete projects
-CREATE POLICY "Authenticated users can delete projects"
-  ON projects FOR DELETE
-  USING (auth.role() = 'authenticated');
+-- Policy 2-4: only the admin (or the service role) can write projects.
+-- Previously these granted INSERT/UPDATE/DELETE to ANY authenticated user —
+-- since Supabase's anon key + RLS is the real security boundary (not just
+-- the app's own admin-email UI gate), that let any signed-up visitor write
+-- or delete portfolio projects directly via the Supabase REST API.
+CREATE POLICY "Admins can manage projects"
+  ON projects FOR ALL
+  USING (public.is_admin() OR auth.role() = 'service_role')
+  WITH CHECK (public.is_admin() OR auth.role() = 'service_role');
 
 -- Blog posts table
 CREATE TABLE IF NOT EXISTS blog_posts (
@@ -58,9 +72,12 @@ CREATE POLICY "Published posts are readable by all"
   ON blog_posts FOR SELECT
   USING (published = true);
 
-CREATE POLICY "Authors can manage their posts"
+-- Only the admin (or the service role) can write posts — see the note above
+-- the `projects` policy for why "any authenticated user" was wrong here too.
+CREATE POLICY "Admins can manage posts"
   ON blog_posts FOR ALL
-  USING (auth.uid() IS NOT NULL);
+  USING (public.is_admin() OR auth.role() = 'service_role')
+  WITH CHECK (public.is_admin() OR auth.role() = 'service_role');
 
 -- Insert Ascend as first project
 INSERT INTO projects (name, slug, description, external_url, tech_stack, is_published)

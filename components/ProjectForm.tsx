@@ -41,7 +41,7 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
 
     try {
       const techStack = formData.tech_stack.split(',').map((t) => t.trim());
-      const payload = {
+      const payload: Omit<Project, 'id' | 'created_at' | 'updated_at'> = {
         ...formData,
         tech_stack: techStack,
       };
@@ -49,13 +49,13 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
       if (initialData) {
         await updateProject(initialData.id, payload);
       } else {
-        await createProject(payload as any);
+        await createProject(payload);
       }
 
       if (onSubmit) onSubmit();
       router.push('/admin/projects');
-    } catch (err: any) {
-      setError(err.message || 'Failed to save project');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save project');
     } finally {
       setLoading(false);
     }

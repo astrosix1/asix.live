@@ -49,9 +49,11 @@ function getSupabaseFromToken(token: string) {
 }
 
 /**
- * Resolve a Supabase client for an API route. The browser client persists the
- * session in localStorage (not cookies), so it sends the access token as a
- * Bearer header; prefer that, and fall back to the cookie-based server client.
+ * Resolve a Supabase client for an API route. Prefer a Bearer token sent by
+ * the client, falling back to the cookie-based server client. See the note
+ * at the top of lib/supabase.ts for the (unresolved, worth verifying live)
+ * question of exactly which of this codebase's session-storage paths the
+ * browser client actually uses.
  */
 export async function getSupabaseFromRequest(request: Request) {
   const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');

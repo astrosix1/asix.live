@@ -2,7 +2,8 @@ import { createPost } from '@/lib/blog';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseFromRequest } from '@/lib/supabase-server';
 
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '')
+// Server-only var — this route never runs client-side, no need for NEXT_PUBLIC_.
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? '')
   .split(',')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
