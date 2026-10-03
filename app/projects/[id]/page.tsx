@@ -157,7 +157,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             <div className="py-12 border-t border-gray-200">
               <h2 className="text-4xl font-bold mb-4 text-gray-900">App Showcase</h2>
               <p className="text-xl text-gray-600 mb-12 max-w-2xl">
-                Explore Ascend's intuitive interface designed for building better habits and tracking your wellness journey.
+                Explore Ascend&apos;s intuitive interface designed for building better habits and tracking your wellness journey.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

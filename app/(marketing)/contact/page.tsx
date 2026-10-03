@@ -13,7 +13,7 @@ export default function Contact() {
         <div className="mb-16">
           <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-4">Get in Touch</h1>
           <p className="text-xl text-slate-600 dark:text-slate-400">
-            Have a question or want to collaborate? We'd love to hear from you.
+            Have a question or want to collaborate? We&apos;d love to hear from you.
           </p>
         </div>
 
