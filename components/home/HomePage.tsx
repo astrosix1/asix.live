@@ -1,353 +1,222 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { motion, easeInOut } from 'framer-motion';
-import { CheckCircle, ArrowRight } from 'lucide-react';
-import { getFeaturedPosts } from '@/lib/blog';
-import type { BlogListItem } from '@/types/blog';
-import BlogCard from '@/components/blog/BlogCard';
+import { ArrowRight } from 'lucide-react';
+import { NetworkBackground } from './NetworkBackground';
+import { SCREENSHOTS } from '@/lib/app-previews';
+import { useLaunchHref } from '@/lib/use-launch-href';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+type AppSlug = 'ascend' | 'geointel' | 'wikihole';
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+interface LauncherApp {
+  slug: AppSlug;
+  name: string;
+  icon: string;
+  blurb: string;
+  url: string;
+  host: string;
+  // Ascend and WikiHole install the session with setSession() and need both
+  // tokens; GeoIntel verifies the access token per request.
+  includeRefreshToken: boolean;
+  highlights: string[];
+}
 
-// Floating animation for animated elements
-const float = {
-  animate: {
-    y: [0, -20, 0],
-    transition: { duration: 4, repeat: Infinity, ease: easeInOut },
+const APPS: LauncherApp[] = [
+  {
+    slug: 'ascend',
+    name: 'Ascend',
+    icon: '⚡',
+    blurb: 'Replace bad habits with better ones and keep your streak alive.',
+    url: 'https://ascend.asix.live',
+    host: 'ascend.asix.live',
+    includeRefreshToken: true,
+    highlights: [],
   },
-};
-
-const floatDelay = (delay: number) => ({
-  animate: {
-    y: [0, -20, 0],
-    transition: { duration: 4, repeat: Infinity, ease: easeInOut, delay },
+  {
+    slug: 'geointel',
+    name: 'GeoIntel',
+    icon: '🌍',
+    blurb: 'Follow live world events on an interactive 3D globe.',
+    url: 'https://geointel.asix.live',
+    host: 'geointel.asix.live',
+    includeRefreshToken: false,
+    highlights: [],
   },
-});
+  {
+    slug: 'wikihole',
+    name: 'WikiHole',
+    icon: '🕳️',
+    blurb: 'Fall down Wikipedia rabbit holes and actually remember them.',
+    url: 'https://wikihole.asix.live',
+    host: 'wikihole.asix.live',
+    includeRefreshToken: true,
+    highlights: ['Curated rabbit holes to dive into', 'Quizzes that turn reading into memory', 'Pick up your trail where you left off'],
+  },
+];
 
 export function HomePage() {
-  const [featuredPosts, setFeaturedPosts] = useState<BlogListItem[]>([]);
-
-  useEffect(() => {
-    getFeaturedPosts(3).then(setFeaturedPosts).catch(() => {});
-  }, []);
-
-  const handleExploreScroll = () => {
-    const element = document.getElementById('section-ascend');
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Whichever app was last hovered/focused/tapped stays on screen, so the
+  // preview never flickers empty when the cursor moves between cards.
+  const [active, setActive] = useState<AppSlug>('ascend');
+  const activeApp = APPS.find((a) => a.slug === active) ?? APPS[0];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-[#070B14] text-white">
+      <NetworkBackground />
+      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl" />
 
-      {/* ─── SECTION 0: PORTFOLIO HERO ─── */}
-      <section className="bg-gradient-to-b from-[#1F2937] to-[#111827] py-24 lg:py-32 overflow-hidden relative">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-screen blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-slate-500 rounded-full mix-blend-screen blur-3xl" />
+      <div className="relative mx-auto grid max-w-7xl gap-x-14 gap-y-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-center lg:px-8 lg:py-16">
+        {/* Heading. On small screens the order is heading → preview → cards. */}
+        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-blue-400">Free to use</p>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            Pick an app and jump in.
+          </h1>
+          <p className="mt-3 text-slate-400">
+            No account needed. Upgrade only for premium features.
+          </p>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left — copy */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 bg-slate-800 text-slate-300 px-4 py-2 rounded-full text-sm font-semibold border border-slate-700">
-                <span>✨</span>
-                <span>Three Platforms, One Vision</span>
-              </div>
-
-              <div className="space-y-4">
-                <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">
-                  Where growth,
-                  <br />
-                  <span className="text-blue-400">strategy, and insight</span>
-                  <br />
-                  meet.
-                </h1>
-                <p className="text-xl text-slate-400 leading-relaxed max-w-lg">
-                  Build better habits with Ascend, navigate the world with GeoIntel, or stay productive with Essentials. Choose your path forward.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <motion.button
-                  onClick={handleExploreScroll}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors text-base shadow-sm"
-                >
-                  Explore Products
-                  <ArrowRight size={18} />
-                </motion.button>
-              </div>
-            </motion.div>
-
-            {/* Right — animated graphic */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="hidden lg:flex items-center justify-center relative h-96"
-            >
-              {/* Center circle */}
-              <motion.div
-                variants={float}
-                animate="animate"
-                className="absolute w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl border border-blue-400"
-              >
-                <span className="text-5xl">⚡</span>
-              </motion.div>
-
-              {/* Top-left circle */}
-              <motion.div
-                variants={floatDelay(0.5)}
-                animate="animate"
-                className="absolute top-0 left-0 w-28 h-28 bg-gradient-to-br from-slate-600 to-slate-700 rounded-full flex items-center justify-center shadow-lg border border-slate-500"
-              >
-                <span className="text-4xl">🌍</span>
-              </motion.div>
-
-              {/* Bottom-right circle */}
-              <motion.div
-                variants={floatDelay(1)}
-                animate="animate"
-                className="absolute bottom-0 right-0 w-28 h-28 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center shadow-lg border border-slate-600"
-              >
-                <span className="text-4xl">📦</span>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 1: ASCEND HERO ─── */}
-      <section id="section-ascend" className="bg-gradient-to-b from-[#0F172A] to-[#111827] py-20 lg:py-28 overflow-hidden relative">
-        {/* Amber glow accents */}
-        <div className="absolute inset-0 opacity-25 pointer-events-none">
-          <div className="absolute top-16 right-16 w-80 h-80 bg-amber-500 rounded-full mix-blend-screen blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-64 h-64 bg-orange-600 rounded-full mix-blend-screen blur-3xl" />
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-            {/* Left — copy */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 bg-amber-900/40 text-amber-300 px-4 py-2 rounded-full text-sm font-semibold border border-amber-800/60">
-                <span>⚡</span>
-                <span>Featured App — Ascend</span>
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">
-                  Break the cycle.
-                  <br />
-                  <span className="text-amber-400">Build a better you.</span>
-                </h2>
-                <p className="text-xl text-slate-400 leading-relaxed max-w-lg">
-                  Ascend replaces destructive habits with meaningful ones — with tracking, community, and momentum that keeps you going.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/projects/ascend"
-                  className="flex items-center gap-2 px-7 py-3.5 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all text-base shadow-sm hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Explore Ascend
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-6 text-sm text-slate-400 flex-wrap">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle size={15} className="text-green-500" />
-                  No commitment required
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle size={15} className="text-green-500" />
-                  Cancel anytime
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Right — screenshot */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="hidden lg:block"
-            >
-              <div className="rounded-2xl overflow-hidden shadow-2xl ring-1 ring-amber-900/30 hover:ring-amber-900/50 transition-all duration-300">
-                <img
-                  src="/images/projects/ascend-dashboard.png"
-                  alt="Ascend Dashboard"
-                  className="w-full h-auto"
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 2: GEOINTEL SPOTLIGHT ─── */}
-      <section className="bg-gradient-to-b from-[#0A0F1E] to-[#0F172A] py-24 overflow-hidden relative">
-        {/* Teal/cyan glow for the intelligence/globe aesthetic */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-teal-500 rounded-full mix-blend-screen blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-72 h-72 bg-blue-700 rounded-full mix-blend-screen blur-3xl" />
-        </div>
-
-        {/* Decorative orbit rings */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none hidden lg:block">
-          <div className="w-[500px] h-[500px] rounded-full border border-teal-400" />
-          <div className="absolute inset-8 rounded-full border border-teal-400" />
-          <div className="absolute inset-16 rounded-full border border-teal-400" />
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="grid lg:grid-cols-2 gap-16 items-center"
-          >
-            <motion.div variants={fadeUp} className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-teal-900/40 text-teal-300 px-4 py-2 rounded-full text-sm font-semibold border border-teal-800/60">
-                <span>🌍</span>
-                <span>Intelligence Platform — GeoIntel</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
-                For the ones who <br />
-                <span className="text-teal-400">need to know.</span>
-              </h2>
-              <p className="text-slate-400 text-lg leading-relaxed">
-                GeoIntel delivers real-time geopolitical intelligence on an interactive 3D globe. Built for analysts, researchers, and decision-makers who can&apos;t afford to be uninformed.
-              </p>
-              <Link
-                href="/projects/geointel"
-                className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Explore GeoIntel
-                <ArrowRight size={18} />
-              </Link>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300">
-              <img
-                src="/images/projects/geointel-dashboard.png"
-                alt="GeoIntel Dashboard"
-                className="w-full h-auto object-contain"
+        {/* App cards and upgrade */}
+        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 lg:self-start">
+          <ul className="space-y-3">
+            {APPS.map((app) => (
+              <AppRow
+                key={app.slug}
+                app={app}
+                isActive={app.slug === active}
+                onSelect={() => setActive(app.slug)}
               />
-            </motion.div>
-            <p className="text-slate-600 text-sm text-center italic">
-              Trusted by analysts, researchers, and decision-makers worldwide.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+            ))}
+          </ul>
 
-      {/* ─── SECTION: LATEST FROM BLOG ─── */}
-      {featuredPosts.length > 0 && (
-        <section className="bg-[#0F172A] py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={stagger}
-            >
-              <motion.div
-                variants={fadeUp}
-                className="flex items-center justify-between mb-10"
-              >
-                <div>
-                  <p className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-2">
-                    From the Blog
-                  </p>
-                  <h2 className="text-3xl font-bold text-white">
-                    Latest Writing
-                  </h2>
-                </div>
-                <Link
-                  href="/blog"
-                  className="text-blue-400 text-sm font-medium hover:text-blue-300 transition-colors flex items-center gap-1"
-                >
-                  View all
-                  <ArrowRight size={14} />
-                </Link>
-              </motion.div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {featuredPosts.map((post) => (
-                  <motion.div key={post.id} variants={fadeUp}>
-                    <BlogCard post={post} />
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── SECTION 5: FINAL CTA ─── */}
-      <section className="bg-gradient-to-b from-[#111827] to-[#1F2937] py-24 overflow-hidden relative">
-        {/* Warm blue glow for the final push */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-64 bg-blue-500 rounded-full mix-blend-screen blur-3xl" />
-        </div>
-
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="space-y-6"
+          <Link
+            href="/checkout"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/40 bg-blue-600/90 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-900/30 transition-colors hover:bg-blue-500"
           >
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold text-white">
-              Pick what you need.
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-xl text-slate-400">
-              Three products. One portfolio. All built to make a real difference.
-            </motion.p>
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <Link
-                href="/projects"
-                className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Browse All Products
-                <ArrowRight size={20} />
-              </Link>
-              <Link
-                href="/projects/ascend"
-                className="px-8 py-4 border-2 border-slate-600 text-slate-300 rounded-lg font-semibold text-lg hover:border-slate-500 hover:bg-slate-800 transition-colors text-center"
-              >
-                Start with Ascend →
-              </Link>
-            </motion.div>
-          </motion.div>
+            Access more
+            <ArrowRight size={18} />
+          </Link>
+          <p className="mt-2 text-center text-xs text-slate-400">Premium membership for all apps</p>
         </div>
-      </section>
 
+        {/* Live preview of the app under the cursor */}
+        <div className="order-2 lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+          <Preview key={activeApp.slug} app={activeApp} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AppRow({
+  app,
+  isActive,
+  onSelect,
+}: {
+  app: LauncherApp;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  const href = useLaunchHref(app.url, app.includeRefreshToken);
+
+  // The card itself isn't a link — only Launch is — so hover/focus/tap just
+  // choose which preview to show and nothing is nested inside another control.
+  return (
+    <li
+      onMouseEnter={onSelect}
+      onFocus={onSelect}
+      onClick={onSelect}
+      className={`flex items-center gap-3 rounded-xl border px-4 py-3 backdrop-blur-sm transition-colors ${
+        isActive
+          ? 'border-blue-400/60 bg-white/10'
+          : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/[0.07]'
+      }`}
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xl" aria-hidden="true">
+        {app.icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <h2 className="font-semibold leading-tight text-white">{app.name}</h2>
+        <p className="mt-0.5 text-sm leading-snug text-slate-400">{app.blurb}</p>
+      </div>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Launch ${app.name}`}
+        className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+      >
+        Launch
+      </a>
+    </li>
+  );
+}
+
+function Preview({ app }: { app: LauncherApp }) {
+  const slides = SCREENSHOTS[app.slug];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % slides.length), 2400);
+    return () => window.clearInterval(id);
+  }, [slides.length]);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-2xl shadow-black/40 backdrop-blur">
+      {/* Window chrome */}
+      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+        <span className="ml-3 truncate rounded-md bg-white/5 px-3 py-0.5 text-xs text-slate-400">{app.host}</span>
+      </div>
+
+      <div className="relative aspect-[16/10] w-full bg-[#0B1120]" aria-live="polite">
+        {slides.length > 0 ? (
+          slides.map((slide, i) => (
+            <Image
+              key={slide.src}
+              src={slide.src}
+              alt={i === index ? `${slide.alt} screenshot` : ''}
+              aria-hidden={i !== index}
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className={`object-contain p-2 transition-opacity duration-500 ${i === index ? 'opacity-100' : 'opacity-0'}`}
+            />
+          ))
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center">
+            <span className="text-6xl" aria-hidden="true">{app.icon}</span>
+            <p className="text-xl font-semibold">{app.name}</p>
+            <ul className="space-y-1.5 text-sm text-slate-300">
+              {app.highlights.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      {slides.length > 1 && (
+        <div className="flex items-center justify-center gap-2 border-t border-white/10 py-3">
+          {slides.map((slide, i) => (
+            <button
+              key={slide.src}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Show screenshot ${i + 1} of ${slides.length}`}
+              aria-current={i === index}
+              className={`h-1.5 rounded-full transition-all ${i === index ? 'w-6 bg-blue-400' : 'w-1.5 bg-white/25 hover:bg-white/40'}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
