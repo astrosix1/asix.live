@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseFromRequest } from '@/lib/supabase-server';
 
 // Server-only var — this route never runs client-side, no need for NEXT_PUBLIC_.
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? '')
+// Falls back to the old name until ADMIN_EMAILS is set everywhere.
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '')
   .split(',')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
@@ -15,7 +16,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const email = (user.email ?? '').toLowerCase();
-  if (ADMIN_EMAILS.length > 0 && !ADMIN_EMAILS.includes(email)) {
+  // Fail closed: an empty/missing allowlist admits nobody (it used to admit everyone).
+  if (!ADMIN_EMAILS.includes(email)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
