@@ -109,7 +109,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Quit Social Media For Good | Ascend by asix.live',
       description:
-        'Ascend replaces the scroll habit with hobbies that stick. Streak tracking, habit stacking, and a recovery timeline — $4.99/month.',
+        'Ascend replaces the scroll habit with hobbies that stick. Streak tracking, habit stacking, and a recovery timeline — free to use.',
     },
   },
   {
@@ -181,7 +181,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Build a Morning Routine That Sticks | Ascend by asix.live',
       description:
-        'Stop planning the perfect morning and start showing up for a small one. Ascend tracks your streaks and builds consistency — $4.99/month.',
+        'Stop planning the perfect morning and start showing up for a small one. Ascend tracks your streaks and builds consistency — free to use.',
     },
   },
   {
@@ -253,7 +253,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Replace Bad Habits For Good | Ascend by asix.live',
       description:
-        'Bad habits don\'t disappear — they get replaced. Ascend pairs what you\'re quitting with what you\'re building, and tracks both — $4.99/month.',
+        'Bad habits don\'t disappear — they get replaced. Ascend pairs what you\'re quitting with what you\'re building, and tracks both — free to use.',
     },
   },
   {
@@ -325,7 +325,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Stop Doomscrolling For Good | Ascend by asix.live',
       description:
-        'Doomscrolling averages 2+ hours a day. Ascend replaces the loop with a streak and a habit you actually want — $4.99/month.',
+        'Doomscrolling averages 2+ hours a day. Ascend replaces the loop with a streak and a habit you actually want — free to use.',
     },
   },
   {
@@ -397,7 +397,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Reduce Screen Time That Actually Sticks | Ascend by asix.live',
       description:
-        'The average adult spends 7+ hours on screens daily. Ascend replaces screen time with habits worth keeping — $4.99/month.',
+        'The average adult spends 7+ hours on screens daily. Ascend replaces screen time with habits worth keeping — free to use.',
     },
   },
   {
@@ -469,7 +469,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Beat Procrastination With Daily Habits | Ascend by asix.live',
       description:
-        'Procrastination is an emotion problem, not a time problem. Ascend builds the start habit that makes action automatic — $4.99/month.',
+        'Procrastination is an emotion problem, not a time problem. Ascend builds the start habit that makes action automatic — free to use.',
     },
   },
   {
@@ -541,7 +541,7 @@ export const USE_CASES: UseCase[] = [
     metadata: {
       title: 'Quit Vaping For Good | Ascend by asix.live',
       description:
-        'Cold turkey has a 5% success rate. Ascend uses replacement habit therapy to make quitting vaping stick — $4.99/month.',
+        'Cold turkey has a 5% success rate. Ascend uses replacement habit therapy to make quitting vaping stick — free to use.',
     },
   },
 ];

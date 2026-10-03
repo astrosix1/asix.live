@@ -82,12 +82,12 @@ const PRICING = [
     btnClass: 'border-slate-600 text-slate-300 hover:border-slate-500 hover:bg-slate-800',
   },
   {
-    name: 'Ascend',
-    premiumAvailable: false,
+    name: 'Ascend Premium',
+    premiumAvailable: true,
     price: '$4.99',
-    description: 'Break destructive habits and build positive ones with tracking, community, and accountability.',
-    features: ['Habit tracking & streaks', 'Leaderboards & competitions', 'Progress analytics', 'Social challenges', 'Milestones & badges', 'Cloud sync'],
-    cta: 'Start Ascend',
+    description: 'Ascend is free to use. Premium unlocks Advanced insights.',
+    features: ['Advanced insights (Analytics)', 'Everything in the free app'],
+    cta: 'Go Premium',
     href: '/checkout?plan=ascend',
     highlight: true,
     accent: 'border-amber-800/60',
@@ -206,7 +206,7 @@ export default function ProjectsPage() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={stagger}
-            className={`grid gap-6 items-start ${PRICING.filter((p) => p.premiumAvailable).length > 1 ? 'md:grid-cols-3' : 'max-w-md mx-auto'}`}
+            className={`grid gap-6 items-start ${(() => { const n = PRICING.filter((p) => p.premiumAvailable).length; return n >= 3 ? 'md:grid-cols-3' : n === 2 ? 'md:grid-cols-2 max-w-3xl mx-auto' : 'max-w-md mx-auto'; })()}`}
           >
             {PRICING.filter((plan) => plan.premiumAvailable).map((plan) => (
               <motion.div
