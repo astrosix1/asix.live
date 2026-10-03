@@ -17,7 +17,14 @@ export default function LoginPage() {
 
   // Only allow relative paths — reject anything that could redirect off-domain
   const rawRedirect = searchParams.get('redirect') || '/';
-  const redirectUri = rawRedirect.startsWith('/') ? rawRedirect : '/';
+  // "//host" and "/\host" start with "/" but browsers treat them as another site,
+  // and control characters inside the path can be stripped into the same thing.
+  const isSafePath =
+    rawRedirect.startsWith('/') &&
+    !rawRedirect.startsWith('//') &&
+    !rawRedirect.startsWith('/\\') &&
+    !/[\u0000-\u001f\u007f]/.test(rawRedirect);
+  const redirectUri = isSafePath ? rawRedirect : '/';
 
   // Sign-in handoff for other asix.live apps (e.g. GeoIntel): after login, send
   // the user back to `return_to` with the access token in the URL fragment.
