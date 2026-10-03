@@ -71,6 +71,7 @@ const PRODUCTS = [
 const PRICING = [
   {
     name: 'Essentials',
+    premiumAvailable: false,
     price: '$4.99',
     description: 'A collection of lightweight, everyday tools for productivity and growth.',
     features: ['WikiHole access', 'Basic analytics', 'Up to 3 tools', 'Email support', 'Community access'],
@@ -82,6 +83,7 @@ const PRICING = [
   },
   {
     name: 'Ascend',
+    premiumAvailable: false,
     price: '$4.99',
     description: 'Break destructive habits and build positive ones with tracking, community, and accountability.',
     features: ['Habit tracking & streaks', 'Leaderboards & competitions', 'Progress analytics', 'Social challenges', 'Milestones & badges', 'Cloud sync'],
@@ -93,6 +95,7 @@ const PRICING = [
   },
   {
     name: 'GeoIntel Premium',
+    premiumAvailable: true,
     price: '$19',
     description: 'GeoIntel is free to use. Premium unlocks the full toolkit for analysts and decision-makers.',
     features: ['Real-time event tracking', 'Interactive 3D globe', 'Threat assessment', 'Predictive analytics', 'Data export & API', 'Custom alerts'],
@@ -203,9 +206,9 @@ export default function ProjectsPage() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={stagger}
-            className="grid md:grid-cols-3 gap-6 items-start"
+            className={`grid gap-6 items-start ${PRICING.filter((p) => p.premiumAvailable).length > 1 ? 'md:grid-cols-3' : 'max-w-md mx-auto'}`}
           >
-            {PRICING.map((plan) => (
+            {PRICING.filter((plan) => plan.premiumAvailable).map((plan) => (
               <motion.div
                 key={plan.name}
                 variants={fadeUp}

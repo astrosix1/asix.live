@@ -33,6 +33,15 @@ const CHECKOUT_INFO = {
 // premium features inside the app rather than access to it. Flip an app to
 // true once its free/premium split is decided.
 const FREE_TO_LAUNCH: Record<'ascend' | 'geointel' | 'wikihole', boolean> = {
+  ascend: true,
+  geointel: true,
+  wikihole: true,
+};
+
+// Apps that actually have premium features to sell. Until an app does, its
+// page shows no price or "Go Premium" button — there's nothing to buy yet.
+// Flip an app to true when its premium features ship.
+const PREMIUM_AVAILABLE: Record<'ascend' | 'geointel' | 'wikihole', boolean> = {
   ascend: false,
   geointel: true,
   wikihole: false,
@@ -226,6 +235,7 @@ export function ProjectTemplate({
   const aboutExtra = ABOUT_EXTRA[projectSlug];
   const screenshots = SCREENSHOTS[projectSlug];
   const freeToLaunch = FREE_TO_LAUNCH[projectSlug];
+  const premiumAvailable = PREMIUM_AVAILABLE[projectSlug];
 
   return (
     <div className="min-h-screen bg-[#0F172A]">
@@ -348,7 +358,9 @@ export function ProjectTemplate({
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Ready to get started?</h2>
           <p className="text-xl text-slate-400 mb-10">
-            {projectSlug === 'ascend'
+            {freeToLaunch && !premiumAvailable
+              ? `${project.name} is free to use. Premium features are coming soon.`
+              : projectSlug === 'ascend'
               ? "Try Ascend free for 7 days. You won't be charged until your trial ends."
               : projectSlug === 'wikihole'
               ? "Try WikiHole free for 7 days. You won't be charged until your trial ends."
@@ -358,7 +370,7 @@ export function ProjectTemplate({
           </p>
 
           {/* Price — shown to anyone who doesn't already have access */}
-          {(freeToLaunch ? !userHasAccess : !isLoggedIn) && (
+          {(freeToLaunch ? premiumAvailable && !userHasAccess : !isLoggedIn) && (
             <div className="mb-8">
               {freeToLaunch && (
                 <p className="text-sm font-semibold uppercase tracking-widest text-slate-400 mb-2">Premium</p>
@@ -379,7 +391,7 @@ export function ProjectTemplate({
               /* Free-to-launch app: everyone can open it; Premium is the upsell */
               <>
                 {launchButtonComponent}
-                {!userHasAccess && (
+                {premiumAvailable && !userHasAccess && (
                   <Link
                     href={`/checkout?plan=${CHECKOUT_INFO[projectSlug].plan}`}
                     className={`flex items-center gap-2 px-8 py-4 ${t.btnPrimary} rounded-lg font-semibold text-lg`}
